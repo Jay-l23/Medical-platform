@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.HisRegMapper">
+    
+    <resultMap type="HisReg" id="HisRegResult">
+        <result property="regId"    column="reg_id"    />
+        <result property="patiName"    column="pati_name"    />
+        <result property="regDepts"    column="reg_depts"    />
+        <result property="regDocter"    column="reg_docter"    />
+        <result property="regPrice"    column="reg_price"    />
+        <result property="regNum"    column="reg_num"    />
+        <result property="regStatus"    column="reg_status"    />
+        <result property="regSdate"    column="reg_sdate"    />
+        <result property="regType"    column="reg_type"    />
+        <result property="regTime"    column="reg_time"    />
+        <result property="regRdate"    column="reg_rdate"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHisRegVo">
+        select reg_id, pati_name, reg_depts, reg_docter, reg_price, reg_num, reg_status, reg_sdate, reg_type, reg_time, reg_rdate, create_by, create_time, update_by, update_time from his_reg
+    </sql>
+
+    <select id="selectHisRegList" parameterType="HisReg" resultMap="HisRegResult">
+        <include refid="selectHisRegVo"/>
+        <where>  
+            <if test="patiName != null  and patiName != ''"> and pati_name like concat('%', #{patiName}, '%')</if>
+            <if test="regDepts != null  and regDepts != ''"> and reg_depts = #{regDepts}</if>
+            <if test="regDocter != null  and regDocter != ''"> and reg_docter = #{regDocter}</if>
+            <if test="regPrice != null "> and reg_price = #{regPrice}</if>
+            <if test="regNum != null "> and reg_num = #{regNum}</if>
+            <if test="regStatus != null  and regStatus != ''"> and reg_status = #{regStatus}</if>
+            <if test="regSdate != null "> and reg_sdate = #{regSdate}</if>
+            <if test="regType != null  and regType != ''"> and reg_type = #{regType}</if>
+            <if test="regTime != null  and regTime != ''"> and reg_time = #{regTime}</if>
+            <if test="regRdate != null "> and reg_rdate = #{regRdate}</if>
+        </where>
+    </select>
+    
+    <select id="selectHisRegByRegId" parameterType="Long" resultMap="HisRegResult">
+        <include refid="selectHisRegVo"/>
+        where reg_id = #{regId}
+    </select>
+        
+    <insert id="insertHisReg" parameterType="HisReg" useGeneratedKeys="true" keyProperty="regId">
+        insert into his_reg
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patiName != null and patiName != ''">pati_name,</if>
+            <if test="regDepts != null and regDepts != ''">reg_depts,</if>
+            <if test="regDocter != null">reg_docter,</if>
+            <if test="regPrice != null">reg_price,</if>
+            <if test="regNum != null">reg_num,</if>
+            <if test="regStatus != null and regStatus != ''">reg_status,</if>
+            <if test="regSdate != null">reg_sdate,</if>
+            <if test="regType != null and regType != ''">reg_type,</if>
+            <if test="regTime != null and regTime != ''">reg_time,</if>
+            <if test="regRdate != null">reg_rdate,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patiName != null and patiName != ''">#{patiName},</if>
+            <if test="regDepts != null and regDepts != ''">#{regDepts},</if>
+            <if test="regDocter != null">#{regDocter},</if>
+            <if test="regPrice != null">#{regPrice},</if>
+            <if test="regNum != null">#{regNum},</if>
+            <if test="regStatus != null and regStatus != ''">#{regStatus},</if>
+            <if test="regSdate != null">#{regSdate},</if>
+            <if test="regType != null and regType != ''">#{regType},</if>
+            <if test="regTime != null and regTime != ''">#{regTime},</if>
+            <if test="regRdate != null">#{regRdate},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHisReg" parameterType="HisReg">
+        update his_reg
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patiName != null and patiName != ''">pati_name = #{patiName},</if>
+            <if test="regDepts != null and regDepts != ''">reg_depts = #{regDepts},</if>
+            <if test="regDocter != null">reg_docter = #{regDocter},</if>
+            <if test="regPrice != null">reg_price = #{regPrice},</if>
+            <if test="regNum != null">reg_num = #{regNum},</if>
+            <if test="regStatus != null and regStatus != ''">reg_status = #{regStatus},</if>
+            <if test="regSdate != null">reg_sdate = #{regSdate},</if>
+            <if test="regType != null and regType != ''">reg_type = #{regType},</if>
+            <if test="regTime != null and regTime != ''">reg_time = #{regTime},</if>
+            <if test="regRdate != null">reg_rdate = #{regRdate},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where reg_id = #{regId}
+    </update>
+
+    <delete id="deleteHisRegByRegId" parameterType="Long">
+        delete from his_reg where reg_id = #{regId}
+    </delete>
+
+    <delete id="deleteHisRegByRegIds" parameterType="String">
+        delete from his_reg where reg_id in 
+        <foreach item="regId" collection="array" open="(" separator="," close=")">
+            #{regId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.MedPatiMapper">
+    
+    <resultMap type="MedPati" id="MedPatiResult">
+        <result property="patiId"    column="pati_id"    />
+        <result property="patiName"    column="pati_name"    />
+        <result property="patiCode"    column="pati_code"    />
+        <result property="patiPhone"    column="pati_phone"    />
+        <result property="patiBirthday"    column="pati_birthday"    />
+        <result property="patiAge"    column="pati_age"    />
+        <result property="patiSex"    column="pati_sex"    />
+        <result property="patiAddress"    column="pati_address"    />
+        <result property="patiAllergy"    column="pati_allergy"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectMedPatiVo">
+        select pati_id, pati_name, pati_code, pati_phone, pati_birthday, pati_age, pati_sex, pati_address, pati_allergy, status, create_by, create_time, update_by, update_time, remark from med_pati
+    </sql>
+
+    <select id="selectMedPatiList" parameterType="MedPati" resultMap="MedPatiResult">
+        <include refid="selectMedPatiVo"/>
+        <where>  
+            <if test="patiName != null  and patiName != ''"> and pati_name like concat('%', #{patiName}, '%')</if>
+            <if test="patiCode != null  and patiCode != ''"> and pati_code = #{patiCode}</if>
+            <if test="patiPhone != null  and patiPhone != ''"> and pati_phone = #{patiPhone}</if>
+            <if test="patiBirthday != null "> and pati_birthday = #{patiBirthday}</if>
+            <if test="patiAge != null  and patiAge != ''"> and pati_age = #{patiAge}</if>
+            <if test="patiSex != null  and patiSex != ''"> and pati_sex = #{patiSex}</if>
+            <if test="patiAllergy != null  and patiAllergy != ''"> and pati_allergy = #{patiAllergy}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectMedPatiByPatiId" parameterType="Long" resultMap="MedPatiResult">
+        <include refid="selectMedPatiVo"/>
+        where pati_id = #{patiId}
+    </select>
+        
+    <insert id="insertMedPati" parameterType="MedPati" useGeneratedKeys="true" keyProperty="patiId">
+        insert into med_pati
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patiName != null and patiName != ''">pati_name,</if>
+            <if test="patiCode != null">pati_code,</if>
+            <if test="patiPhone != null">pati_phone,</if>
+            <if test="patiBirthday != null">pati_birthday,</if>
+            <if test="patiAge != null">pati_age,</if>
+            <if test="patiSex != null">pati_sex,</if>
+            <if test="patiAddress != null">pati_address,</if>
+            <if test="patiAllergy != null">pati_allergy,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patiName != null and patiName != ''">#{patiName},</if>
+            <if test="patiCode != null">#{patiCode},</if>
+            <if test="patiPhone != null">#{patiPhone},</if>
+            <if test="patiBirthday != null">#{patiBirthday},</if>
+            <if test="patiAge != null">#{patiAge},</if>
+            <if test="patiSex != null">#{patiSex},</if>
+            <if test="patiAddress != null">#{patiAddress},</if>
+            <if test="patiAllergy != null">#{patiAllergy},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateMedPati" parameterType="MedPati">
+        update med_pati
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patiName != null and patiName != ''">pati_name = #{patiName},</if>
+            <if test="patiCode != null">pati_code = #{patiCode},</if>
+            <if test="patiPhone != null">pati_phone = #{patiPhone},</if>
+            <if test="patiBirthday != null">pati_birthday = #{patiBirthday},</if>
+            <if test="patiAge != null">pati_age = #{patiAge},</if>
+            <if test="patiSex != null">pati_sex = #{patiSex},</if>
+            <if test="patiAddress != null">pati_address = #{patiAddress},</if>
+            <if test="patiAllergy != null">pati_allergy = #{patiAllergy},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where pati_id = #{patiId}
+    </update>
+
+    <delete id="deleteMedPatiByPatiId" parameterType="Long">
+        delete from med_pati where pati_id = #{patiId}
+    </delete>
+
+    <delete id="deleteMedPatiByPatiIds" parameterType="String">
+        delete from med_pati where pati_id in 
+        <foreach item="patiId" collection="array" open="(" separator="," close=")">
+            #{patiId}
+        </foreach>
+    </delete>
+</mapper>

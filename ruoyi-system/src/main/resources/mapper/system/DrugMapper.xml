@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.DrugMapper">
+
+    <resultMap type="Drug" id="DrugResult">
+        <result property="drugId" column="drug_id"/>
+        <result property="drugName" column="drug_name"/>
+        <result property="drugNumber" column="drug_number"/>
+        <result property="drugKey" column="drug_key"/>
+        <result property="drugType" column="drug_type"/>
+        <result property="drugRxType" column="drug_Rx_type"/>
+        <result property="drugUnit" column="drug_unit"/>
+        <result property="drugRxPrice" column="drug_Rx_price"/>
+        <result property="drugStocks" column="drug_stocks"/>
+        <result property="drugWarning" column="drug_warning"/>
+        <result property="drugMatrixing" column="drug_matrixing"/>
+        <result property="drugStatus" column="drug_status"/>
+        <result property="facId" column="fac_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectDrugVo">
+        select drug_id,
+               drug_name,
+               drug_number,
+               drug_key,
+               drug_type,
+               drug_Rx_type,
+               drug_unit,
+               drug_Rx_price,
+               drug_stocks,
+               drug_warning,
+               drug_matrixing,
+               drug_status,
+               fac_id,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark
+        from drug
+    </sql>
+
+    <select id="selectDrugList" parameterType="Drug" resultMap="DrugResult">
+        <include refid="selectDrugVo"/>
+        <where>
+            <if test="drugName != null  and drugName != ''">and drug_name like concat('%', #{drugName}, '%')</if>
+            <if test="drugNumber != null  and drugNumber != ''">and drug_number = #{drugNumber}</if>
+            <if test="drugKey != null  and drugKey != ''">and drug_key = #{drugKey}</if>
+            <if test="drugType != null  and drugType != ''">and drug_type = #{drugType}</if>
+            <if test="drugRxType != null  and drugRxType != ''">and drug_Rx_type = #{drugRxType}</if>
+            <if test="drugUnit != null  and drugUnit != ''">and drug_unit = #{drugUnit}</if>
+            <if test="drugRxPrice != null ">and drug_Rx_price = #{drugRxPrice}</if>
+            <if test="drugStocks != null ">and drug_stocks = #{drugStocks}</if>
+            <if test="drugWarning != null ">and drug_warning = #{drugWarning}</if>
+            <if test="drugMatrixing != null ">and drug_matrixing = #{drugMatrixing}</if>
+            <if test="drugStatus != null ">and drug_status = #{drugStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectDrugByDrugId" parameterType="Long" resultMap="DrugResult">
+        <include refid="selectDrugVo"/>
+        where drug_id = #{drugId}
+    </select>
+
+    <insert id="insertDrug" parameterType="Drug" useGeneratedKeys="true" keyProperty="drugId">
+        insert into drug
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="drugName != null and drugName != ''">drug_name,</if>
+            <if test="drugNumber != null and drugNumber != ''">drug_number,</if>
+            <if test="drugKey != null">drug_key,</if>
+            <if test="drugType != null">drug_type,</if>
+            <if test="drugRxType != null">drug_Rx_type,</if>
+            <if test="drugUnit != null">drug_unit,</if>
+            <if test="drugRxPrice != null">drug_Rx_price,</if>
+            <if test="drugStocks != null">drug_stocks,</if>
+            <if test="drugWarning != null">drug_warning,</if>
+            <if test="drugMatrixing != null">drug_matrixing,</if>
+            <if test="drugStatus != null">drug_status,</if>
+            <if test="facId != null">fac_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="drugName != null and drugName != ''">#{drugName},</if>
+            <if test="drugNumber != null and drugNumber != ''">#{drugNumber},</if>
+            <if test="drugKey != null">#{drugKey},</if>
+            <if test="drugType != null">#{drugType},</if>
+            <if test="drugRxType != null">#{drugRxType},</if>
+            <if test="drugUnit != null">#{drugUnit},</if>
+            <if test="drugRxPrice != null">#{drugRxPrice},</if>
+            <if test="drugStocks != null">#{drugStocks},</if>
+            <if test="drugWarning != null">#{drugWarning},</if>
+            <if test="drugMatrixing != null">#{drugMatrixing},</if>
+            <if test="drugStatus != null">#{drugStatus},</if>
+            <if test="facId != null">#{facId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDrug" parameterType="Drug">
+        update drug
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="drugName != null and drugName != ''">drug_name = #{drugName},</if>
+            <if test="drugNumber != null and drugNumber != ''">drug_number = #{drugNumber},</if>
+            <if test="drugKey != null">drug_key = #{drugKey},</if>
+            <if test="drugType != null">drug_type = #{drugType},</if>
+            <if test="drugRxType != null">drug_Rx_type = #{drugRxType},</if>
+            <if test="drugUnit != null">drug_unit = #{drugUnit},</if>
+            <if test="drugRxPrice != null">drug_Rx_price = #{drugRxPrice},</if>
+            <if test="drugStocks != null">drug_stocks = #{drugStocks},</if>
+            <if test="drugWarning != null">drug_warning = #{drugWarning},</if>
+            <if test="drugMatrixing != null">drug_matrixing = #{drugMatrixing},</if>
+            <if test="drugStatus != null">drug_status = #{drugStatus},</if>
+            <if test="facId != null">fac_id = #{facId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where drug_id = #{drugId}
+    </update>
+
+    <delete id="deleteDrugByDrugId" parameterType="Long">
+        delete
+        from drug
+        where drug_id = #{drugId}
+    </delete>
+
+    <delete id="deleteDrugByDrugIds" parameterType="String">
+        delete from drug where drug_id in
+        <foreach item="drugId" collection="array" open="(" separator="," close=")">
+            #{drugId}
+        </foreach>
+    </delete>
+</mapper>

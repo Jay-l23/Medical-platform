@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysDeptsMapper">
+    
+    <resultMap type="SysDepts" id="SysDeptsResult">
+        <result property="deptsId"    column="depts_id"    />
+        <result property="deptsName"    column="depts_name"    />
+        <result property="deptsCode"    column="depts_code"    />
+        <result property="deptsNum"    column="depts_num"    />
+        <result property="deptsLeader"    column="depts_leader"    />
+        <result property="deptsPhone"    column="depts_phone"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSysDeptsVo">
+        select depts_id, depts_name, depts_code, depts_num, depts_leader, depts_phone, status, create_by, create_time, update_by, update_time from sys_depts
+    </sql>
+
+    <select id="selectSysDeptsList" parameterType="SysDepts" resultMap="SysDeptsResult">
+        <include refid="selectSysDeptsVo"/>
+        <where>  
+            <if test="deptsId != null "> and depts_id = #{deptsId}</if>
+            <if test="deptsName != null  and deptsName != ''"> and depts_name like concat('%', #{deptsName}, '%')</if>
+            <if test="deptsCode != null  and deptsCode != ''"> and depts_code = #{deptsCode}</if>
+            <if test="deptsLeader != null  and deptsLeader != ''"> and depts_leader = #{deptsLeader}</if>
+            <if test="deptsPhone != null  and deptsPhone != ''"> and depts_phone = #{deptsPhone}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysDeptsByDeptsId" parameterType="Long" resultMap="SysDeptsResult">
+        <include refid="selectSysDeptsVo"/>
+        where depts_id = #{deptsId}
+    </select>
+        
+    <insert id="insertSysDepts" parameterType="SysDepts">
+        insert into sys_depts
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptsId != null">depts_id,</if>
+            <if test="deptsName != null and deptsName != ''">depts_name,</if>
+            <if test="deptsCode != null and deptsCode != ''">depts_code,</if>
+            <if test="deptsNum != null">depts_num,</if>
+            <if test="deptsLeader != null">depts_leader,</if>
+            <if test="deptsPhone != null">depts_phone,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptsId != null">#{deptsId},</if>
+            <if test="deptsName != null and deptsName != ''">#{deptsName},</if>
+            <if test="deptsCode != null and deptsCode != ''">#{deptsCode},</if>
+            <if test="deptsNum != null">#{deptsNum},</if>
+            <if test="deptsLeader != null">#{deptsLeader},</if>
+            <if test="deptsPhone != null">#{deptsPhone},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysDepts" parameterType="SysDepts">
+        update sys_depts
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptsName != null and deptsName != ''">depts_name = #{deptsName},</if>
+            <if test="deptsCode != null and deptsCode != ''">depts_code = #{deptsCode},</if>
+            <if test="deptsNum != null">depts_num = #{deptsNum},</if>
+            <if test="deptsLeader != null">depts_leader = #{deptsLeader},</if>
+            <if test="deptsPhone != null">depts_phone = #{deptsPhone},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where depts_id = #{deptsId}
+    </update>
+
+    <delete id="deleteSysDeptsByDeptsId" parameterType="Long">
+        delete from sys_depts where depts_id = #{deptsId}
+    </delete>
+
+    <delete id="deleteSysDeptsByDeptsIds" parameterType="String">
+        delete from sys_depts where depts_id in 
+        <foreach item="deptsId" collection="array" open="(" separator="," close=")">
+            #{deptsId}
+        </foreach>
+    </delete>
+</mapper>

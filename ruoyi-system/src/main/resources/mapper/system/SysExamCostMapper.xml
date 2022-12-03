@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysExamCostMapper">
+    
+    <resultMap type="SysExamCost" id="SysExamCostResult">
+        <result property="examId"    column="exam_id"    />
+        <result property="examName"    column="exam_name"    />
+        <result property="examKey"    column="exam_key"    />
+        <result property="examOnePrice"    column="exam_one_price"    />
+        <result property="examCost"    column="exam_cost"    />
+        <result property="examUnit"    column="exam_unit"    />
+        <result property="examType"    column="exam_type"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysExamCostVo">
+        select exam_id, exam_name, exam_key, exam_one_price, exam_cost, exam_unit, exam_type, status, create_by, create_time, update_by, update_time, remark from sys_exam_cost
+    </sql>
+
+    <select id="selectSysExamCostList" parameterType="SysExamCost" resultMap="SysExamCostResult">
+        <include refid="selectSysExamCostVo"/>
+        <where>  
+            <if test="examName != null  and examName != ''"> and exam_name like concat('%', #{examName}, '%')</if>
+            <if test="examKey != null  and examKey != ''"> and exam_key = #{examKey}</if>
+            <if test="examOnePrice != null "> and exam_one_price = #{examOnePrice}</if>
+            <if test="examCost != null "> and exam_cost = #{examCost}</if>
+            <if test="examUnit != null  and examUnit != ''"> and exam_unit = #{examUnit}</if>
+            <if test="examType != null "> and exam_type = #{examType}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysExamCostByExamId" parameterType="Long" resultMap="SysExamCostResult">
+        <include refid="selectSysExamCostVo"/>
+        where exam_id = #{examId}
+    </select>
+        
+    <insert id="insertSysExamCost" parameterType="SysExamCost" useGeneratedKeys="true" keyProperty="examId">
+        insert into sys_exam_cost
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="examName != null and examName != ''">exam_name,</if>
+            <if test="examKey != null and examKey != ''">exam_key,</if>
+            <if test="examOnePrice != null">exam_one_price,</if>
+            <if test="examCost != null">exam_cost,</if>
+            <if test="examUnit != null and examUnit != ''">exam_unit,</if>
+            <if test="examType != null">exam_type,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="examName != null and examName != ''">#{examName},</if>
+            <if test="examKey != null and examKey != ''">#{examKey},</if>
+            <if test="examOnePrice != null">#{examOnePrice},</if>
+            <if test="examCost != null">#{examCost},</if>
+            <if test="examUnit != null and examUnit != ''">#{examUnit},</if>
+            <if test="examType != null">#{examType},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysExamCost" parameterType="SysExamCost">
+        update sys_exam_cost
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examName != null and examName != ''">exam_name = #{examName},</if>
+            <if test="examKey != null and examKey != ''">exam_key = #{examKey},</if>
+            <if test="examOnePrice != null">exam_one_price = #{examOnePrice},</if>
+            <if test="examCost != null">exam_cost = #{examCost},</if>
+            <if test="examUnit != null and examUnit != ''">exam_unit = #{examUnit},</if>
+            <if test="examType != null">exam_type = #{examType},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where exam_id = #{examId}
+    </update>
+
+    <delete id="deleteSysExamCostByExamId" parameterType="Long">
+        delete from sys_exam_cost where exam_id = #{examId}
+    </delete>
+
+    <delete id="deleteSysExamCostByExamIds" parameterType="String">
+        delete from sys_exam_cost where exam_id in 
+        <foreach item="examId" collection="array" open="(" separator="," close=")">
+            #{examId}
+        </foreach>
+    </delete>
+</mapper>

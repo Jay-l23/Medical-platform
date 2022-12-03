@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysDoctersMapper">
+    
+    <resultMap type="SysDocters" id="SysDoctersResult">
+        <result property="dId"    column="d_id"    />
+        <result property="dName"    column="d_name"    />
+        <result property="deptsId"    column="depts_id"    />
+        <result property="dPhone"    column="d_phone"    />
+        <result property="dSex"    column="d_sex"    />
+        <result property="dAge"    column="d_age"    />
+        <result property="orderwork"    column="orderwork"    />
+        <result property="dEducationBg"    column="d_education_bg"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSysDoctersVo">
+        select d_id, d_name, depts_id, d_phone, d_sex, d_age, orderwork, d_education_bg, create_time from sys_docters
+    </sql>
+
+    <select id="selectSysDoctersList" parameterType="SysDocters" resultMap="SysDoctersResult">
+        <include refid="selectSysDoctersVo"/>
+        <where>  
+            <if test="dId != null "> and d_id = #{dId}</if>
+            <if test="dName != null  and dName != ''"> and d_name like concat('%', #{dName}, '%')</if>
+            <if test="deptsId != null "> and depts_id = #{deptsId}</if>
+            <if test="dPhone != null  and dPhone != ''"> and d_phone = #{dPhone}</if>
+            <if test="dSex != null  and dSex != ''"> and d_sex = #{dSex}</if>
+            <if test="dAge != null "> and d_age = #{dAge}</if>
+            <if test="orderwork != null "> and orderwork = #{orderwork}</if>
+            <if test="dEducationBg != null "> and d_education_bg = #{dEducationBg}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysDoctersByDId" parameterType="Long" resultMap="SysDoctersResult">
+        <include refid="selectSysDoctersVo"/>
+        where d_id = #{dId}
+    </select>
+        
+    <insert id="insertSysDocters" parameterType="SysDocters" useGeneratedKeys="true" keyProperty="dId">
+        insert into sys_docters
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dName != null and dName != ''">d_name,</if>
+            <if test="deptsId != null">depts_id,</if>
+            <if test="dPhone != null">d_phone,</if>
+            <if test="dSex != null">d_sex,</if>
+            <if test="dAge != null">d_age,</if>
+            <if test="orderwork != null">orderwork,</if>
+            <if test="dEducationBg != null">d_education_bg,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dName != null and dName != ''">#{dName},</if>
+            <if test="deptsId != null">#{deptsId},</if>
+            <if test="dPhone != null">#{dPhone},</if>
+            <if test="dSex != null">#{dSex},</if>
+            <if test="dAge != null">#{dAge},</if>
+            <if test="orderwork != null">#{orderwork},</if>
+            <if test="dEducationBg != null">#{dEducationBg},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysDocters" parameterType="SysDocters">
+        update sys_docters
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dName != null and dName != ''">d_name = #{dName},</if>
+            <if test="deptsId != null">depts_id = #{deptsId},</if>
+            <if test="dPhone != null">d_phone = #{dPhone},</if>
+            <if test="dSex != null">d_sex = #{dSex},</if>
+            <if test="dAge != null">d_age = #{dAge},</if>
+            <if test="orderwork != null">orderwork = #{orderwork},</if>
+            <if test="dEducationBg != null">d_education_bg = #{dEducationBg},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where d_id = #{dId}
+    </update>
+
+    <delete id="deleteSysDoctersByDId" parameterType="Long">
+        delete from sys_docters where d_id = #{dId}
+    </delete>
+
+    <delete id="deleteSysDoctersByDIds" parameterType="String">
+        delete from sys_docters where d_id in 
+        <foreach item="dId" collection="array" open="(" separator="," close=")">
+            #{dId}
+        </foreach>
+    </delete>
+</mapper>

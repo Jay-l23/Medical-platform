@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SupplierMapper">
+    
+    <resultMap type="Supplier" id="SupplierResult">
+        <result property="supId"    column="sup_id"    />
+        <result property="supName"    column="sup_name"    />
+        <result property="supContact"    column="sup_contact"    />
+        <result property="supMobile"    column="sup_mobile"    />
+        <result property="supTel"    column="sup_tel"    />
+        <result property="supAccount"    column="sup_account"    />
+        <result property="supAddress"    column="sup_address"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSupplierVo">
+        select sup_id, sup_name, sup_contact, sup_mobile, sup_tel, sup_account, sup_address, status, create_by, create_time, update_by, update_time, remark from supplier
+    </sql>
+
+    <select id="selectSupplierList" parameterType="Supplier" resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        <where>  
+            <if test="supId != null "> and sup_id = #{supId}</if>
+            <if test="supName != null  and supName != ''"> and sup_name like concat('%', #{supName}, '%')</if>
+            <if test="supContact != null  and supContact != ''"> and sup_contact = #{supContact}</if>
+            <if test="supMobile != null  and supMobile != ''"> and sup_mobile = #{supMobile}</if>
+            <if test="supTel != null  and supTel != ''"> and sup_tel = #{supTel}</if>
+            <if test="supAccount != null  and supAccount != ''"> and sup_account = #{supAccount}</if>
+            <if test="supAddress != null  and supAddress != ''"> and sup_address = #{supAddress}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectSupplierBySupId" parameterType="Long" resultMap="SupplierResult">
+        <include refid="selectSupplierVo"/>
+        where sup_id = #{supId}
+    </select>
+        
+    <insert id="insertSupplier" parameterType="Supplier" useGeneratedKeys="true" keyProperty="supId">
+        insert into supplier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="supName != null and supName != ''">sup_name,</if>
+            <if test="supContact != null and supContact != ''">sup_contact,</if>
+            <if test="supMobile != null and supMobile != ''">sup_mobile,</if>
+            <if test="supTel != null">sup_tel,</if>
+            <if test="supAccount != null">sup_account,</if>
+            <if test="supAddress != null">sup_address,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="supName != null and supName != ''">#{supName},</if>
+            <if test="supContact != null and supContact != ''">#{supContact},</if>
+            <if test="supMobile != null and supMobile != ''">#{supMobile},</if>
+            <if test="supTel != null">#{supTel},</if>
+            <if test="supAccount != null">#{supAccount},</if>
+            <if test="supAddress != null">#{supAddress},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSupplier" parameterType="Supplier">
+        update supplier
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supName != null and supName != ''">sup_name = #{supName},</if>
+            <if test="supContact != null and supContact != ''">sup_contact = #{supContact},</if>
+            <if test="supMobile != null and supMobile != ''">sup_mobile = #{supMobile},</if>
+            <if test="supTel != null">sup_tel = #{supTel},</if>
+            <if test="supAccount != null">sup_account = #{supAccount},</if>
+            <if test="supAddress != null">sup_address = #{supAddress},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where sup_id = #{supId}
+    </update>
+
+    <delete id="deleteSupplierBySupId" parameterType="Long">
+        delete from supplier where sup_id = #{supId}
+    </delete>
+
+    <delete id="deleteSupplierBySupIds" parameterType="String">
+        delete from supplier where sup_id in 
+        <foreach item="supId" collection="array" open="(" separator="," close=")">
+            #{supId}
+        </foreach>
+    </delete>
+</mapper>

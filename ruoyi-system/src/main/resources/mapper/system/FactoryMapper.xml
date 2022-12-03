@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.FactoryMapper">
+    
+    <resultMap type="Factory" id="FactoryResult">
+        <result property="facId"    column="fac_id"    />
+        <result property="facName"    column="fac_name"    />
+        <result property="facCode"    column="fac_code"    />
+        <result property="facContact"    column="fac_contact"    />
+        <result property="facTel"    column="fac_tel"    />
+        <result property="facKey"    column="fac_key"    />
+        <result property="facAddress"    column="fac_address"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectFactoryVo">
+        select fac_id, fac_name, fac_code, fac_contact, fac_tel, fac_key, fac_address, status, create_by, create_time, update_by, update_time, remark from factory
+    </sql>
+
+    <select id="selectFactoryList" parameterType="Factory" resultMap="FactoryResult">
+        <include refid="selectFactoryVo"/>
+        <where>  
+            <if test="facName != null  and facName != ''"> and fac_name like concat('%', #{facName}, '%')</if>
+            <if test="facCode != null  and facCode != ''"> and fac_code = #{facCode}</if>
+            <if test="facContact != null  and facContact != ''"> and fac_contact = #{facContact}</if>
+            <if test="facTel != null  and facTel != ''"> and fac_tel = #{facTel}</if>
+            <if test="facKey != null  and facKey != ''"> and fac_key = #{facKey}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectFactoryByFacId" parameterType="Long" resultMap="FactoryResult">
+        <include refid="selectFactoryVo"/>
+        where fac_id = #{facId}
+    </select>
+        
+    <insert id="insertFactory" parameterType="Factory" useGeneratedKeys="true" keyProperty="facId">
+        insert into factory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="facName != null and facName != ''">fac_name,</if>
+            <if test="facCode != null">fac_code,</if>
+            <if test="facContact != null">fac_contact,</if>
+            <if test="facTel != null and facTel != ''">fac_tel,</if>
+            <if test="facKey != null and facKey != ''">fac_key,</if>
+            <if test="facAddress != null and facAddress != ''">fac_address,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="facName != null and facName != ''">#{facName},</if>
+            <if test="facCode != null">#{facCode},</if>
+            <if test="facContact != null">#{facContact},</if>
+            <if test="facTel != null and facTel != ''">#{facTel},</if>
+            <if test="facKey != null and facKey != ''">#{facKey},</if>
+            <if test="facAddress != null and facAddress != ''">#{facAddress},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFactory" parameterType="Factory">
+        update factory
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="facName != null and facName != ''">fac_name = #{facName},</if>
+            <if test="facCode != null">fac_code = #{facCode},</if>
+            <if test="facContact != null">fac_contact = #{facContact},</if>
+            <if test="facTel != null and facTel != ''">fac_tel = #{facTel},</if>
+            <if test="facKey != null and facKey != ''">fac_key = #{facKey},</if>
+            <if test="facAddress != null and facAddress != ''">fac_address = #{facAddress},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where fac_id = #{facId}
+    </update>
+
+    <delete id="deleteFactoryByFacId" parameterType="Long">
+        delete from factory where fac_id = #{facId}
+    </delete>
+
+    <delete id="deleteFactoryByFacIds" parameterType="String">
+        delete from factory where fac_id in 
+        <foreach item="facId" collection="array" open="(" separator="," close=")">
+            #{facId}
+        </foreach>
+    </delete>
+</mapper>
