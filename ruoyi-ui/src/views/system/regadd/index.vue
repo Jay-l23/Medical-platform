@@ -9,95 +9,39 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <!--      <el-form-item label="流水编号" prop="regNum">-->
-      <!--        <el-input-->
-      <!--          v-model="queryParams.regNum"-->
-      <!--          placeholder="请输入流水编号"-->
-      <!--          clearable-->
-      <!--          @keyup.enter.native="handleQuery"-->
-      <!--        />-->
-      <!--      </el-form-item>-->
-      <el-form-item label="挂号状态" prop="regStatus">
-        <el-select v-model="queryParams.regStatus" placeholder="请选择状态" clearable>
-          <el-option
-            v-for="dict in dict.type.his_reg"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="挂号时段" prop="regTime">
+      <el-form-item label="身份证号" prop="regCardNum">
         <el-input
-          v-model="queryParams.regTime"
-          placeholder="请输入挂号时段"
+          v-model="queryParams.regCardNum"
+          placeholder="请输入身份证号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="挂号时间" prop="regRdate">
-        <el-date-picker clearable
-                        v-model="queryParams.regRdate"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择挂号时间">
-        </el-date-picker>
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="warning" plain icon="el-icon-download"
+                   size="mini" @click="handleExport" v-hasPermi="['system:reg:export']">导出</el-button>
       </el-form-item>
     </el-form>
 
-    <!--    <el-row :gutter="10" class="mb8">-->
-    <!--      <el-col :span="1.5">-->
-    <!--        <el-button-->
-    <!--          type="primary"-->
-    <!--          plain-->
-    <!--          icon="el-icon-plus"-->
-    <!--          size="mini"-->
-    <!--          @click="handleAdd"-->
-    <!--          v-hasPermi="['system:reg:add']"-->
-    <!--        >新增</el-button>-->
-    <!--      </el-col>-->
-    <!--      <el-col :span="1.5">-->
-    <!--        <el-button-->
-    <!--          type="success"-->
-    <!--          plain-->
-    <!--          icon="el-icon-edit"-->
-    <!--          size="mini"-->
-    <!--          :disabled="single"-->
-    <!--          @click="handleUpdate"-->
-    <!--          v-hasPermi="['system:reg:edit']"-->
-    <!--        >修改</el-button>-->
-    <!--      </el-col>-->
-    <!--      <el-col :span="1.5">-->
-    <!--        <el-button-->
-    <!--          type="danger"-->
-    <!--          plain-->
-    <!--          icon="el-icon-delete"-->
-    <!--          size="mini"-->
-    <!--          :disabled="multiple"-->
-    <!--          @click="handleDelete"-->
-    <!--          v-hasPermi="['system:reg:remove']"-->
-    <!--        >删除</el-button>-->
-    <!--      </el-col>-->
-    <!--      <el-col :span="1.5">-->
-    <!--        <el-button-->
-    <!--          type="warning"-->
-    <!--          plain-->
-    <!--          icon="el-icon-download"-->
-    <!--          size="mini"-->
-    <!--          @click="handleExport"-->
-    <!--          v-hasPermi="['system:reg:export']"-->
-    <!--        >导出</el-button>-->
-    <!--      </el-col>-->
-    <!--      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>-->
-    <!--    </el-row>-->
+<!--    <el-row :gutter="10" class="mb8">-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['system:reg:export']"-->
+<!--        >导出-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>-->
+<!--    </el-row>-->
 
     <el-table v-loading="loading" :data="regList" border @selection-change="handleSelectionChange">
-<!--      <el-table-column type="selection" width="55" align="center"/>-->
-      <!--      <el-table-column label="挂单号" align="center" prop="regId" />-->
       <el-table-column label="患者姓名" align="center" prop="patiName"/>
       <el-table-column label="挂号科室" align="center" prop="regDepts"/>
       <el-table-column label="接诊医生" align="center" prop="regDocter"/>
@@ -119,11 +63,6 @@
           <span>{{ scope.row.status==1?"上午":"下午"}}</span>
         </template>
       </el-table-column>
-      <!--      <el-table-column label="挂号时间" align="center" prop="regRdate" width="180">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <span>{{ parseTime(scope.row.regRdate, '{y}-{m}-{d}') }}</span>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -146,12 +85,115 @@
       </el-table-column>
     </el-table>
 
+<!--    <pagination-->
+<!--      v-show="total>0"-->
+<!--      :total="total"-->
+<!--      :page.sync="queryParams.pageNum"-->
+<!--      :limit.sync="queryParams.pageSize"-->
+<!--      @pagination="getList"-->
+<!--    />-->
+    <br>
+    <el-tabs v-model="activeName" type="card">
+      <el-tab-pane label="门诊" name="first">
+        挂号费5￥
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['system:reg:add']"
+        >挂号收费
+        </el-button>
+      </el-tab-pane>
+      <el-tab-pane label="门诊+病例本" name="second">
+        挂号费20￥
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['system:reg:add']"
+        >挂号收费
+        </el-button>
+      </el-tab-pane>
+      <el-tab-pane label="急诊" name="third">
+        挂号费30￥
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['system:reg:add']"
+        >挂号收费
+        </el-button>
+      </el-tab-pane>
+      <el-tab-pane label="急诊+病例表" name="fourth">
+        挂号费45￥
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['system:reg:add']"
+        >挂号收费
+        </el-button>
+      </el-tab-pane>
+    </el-tabs>
+
+
+    <br>
+    <el-row>
+      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+        <el-form-item label="科室编号" prop="deptsId">
+          <el-input
+            v-model="queryParams.deptsId"
+            placeholder="请输入科室编号"
+            clearable
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+
+        <el-form-item label="科室状态" prop="status">
+          <el-select v-model="queryParams.status" placeholder="请选择科室状态" clearable>
+            <el-option
+              v-for="dict in dict.type.sys_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+
+      <el-table v-loading="loading" :data="deptsList" border @selection-change="handleSelectionChange">
+        <el-table-column label="科室编号" align="center" prop="deptsId"/>
+        <el-table-column label="科室名称" align="center" prop="deptsName"/>
+        <el-table-column label="科室挂号量" align="center" prop="deptsNum"/>
+        <el-table-column label="科室状态" align="center" prop="status">
+          <template slot-scope="scope">
+<!--            <dict-tag :options="dict.type.sys_status" :value="scope.row.status"/>-->
+            <span>{{scope.row.status==1?"值班中":"空闲中"}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+
+    </el-row>
+
     <pagination
       v-show="total>0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
-      @pagination="getList"
+      @pagination="getDeptsList"
     />
 
     <!-- 添加或修改挂号列表对话框 -->
@@ -159,6 +201,12 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="患者姓名" prop="patiName">
           <el-input v-model="form.patiName" placeholder="请输入患者姓名"/>
+        </el-form-item>
+        <el-form-item label="身份证号" prop="regCardNum">
+          <el-input v-model="form.regCardNum" placeholder="请输入身份证号"/>
+        </el-form-item>
+        <el-form-item label="挂号科室" prop="regDepts">
+          <el-input v-model="form.regDepts" placeholder="请输入挂号科室"/>
         </el-form-item>
         <el-form-item label="接诊医生" prop="regDocter">
           <el-input v-model="form.regDocter" placeholder="请输入接诊医生"/>
@@ -188,11 +236,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="挂号时段" prop="regTime">
-          <el-select v-model="form.regTime" placeholder="请输入挂号时段">
-            <el-option label="上午" value="1"></el-option>
-            <el-option label="下午" value="2"></el-option>
-          </el-select>
-<!--          <el-input v-model="form.regTime" placeholder="请输入挂号时段"/>-->
+          <el-input v-model="form.regTime" placeholder="请输入挂号时段"/>
         </el-form-item>
         <el-form-item label="挂号时间" prop="regRdate">
           <el-date-picker clearable
@@ -213,12 +257,16 @@
 
 <script>
   import {listReg, getReg, delReg, addReg, updateReg} from "@/api/system/reg";
+  import { listDepts, getDepts, delDepts, addDepts, updateDepts } from "@/api/system/depts";
 
   export default {
     name: "Reg",
     dicts: ['his_reg'],
     data() {
       return {
+
+        deptsList: [],
+
         // 遮罩层
         loading: true,
         // 选中数组
@@ -242,6 +290,7 @@
           pageNum: 1,
           pageSize: 10,
           patiName: null,
+          regCardNum: null,
           regDepts: null,
           regDocter: null,
           regPrice: null,
@@ -258,6 +307,9 @@
         rules: {
           patiName: [
             {required: true, message: "患者姓名不能为空", trigger: "blur"}
+          ],
+          regCardNum: [
+            {required: true, message: "身份证号不能为空", trigger: "blur"}
           ],
           regDepts: [
             {required: true, message: "挂号科室不能为空", trigger: "change"}
@@ -285,8 +337,18 @@
     },
     created() {
       this.getList();
+      this.getDeptsList();
     },
     methods: {
+      /** 查询科室管理列表 */
+      getDeptsList() {
+        this.loading = true;
+        listDepts(this.queryParams).then(response => {
+          this.deptsList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        });
+      },
       /** 查询挂号列表列表 */
       getList() {
         this.loading = true;
@@ -306,6 +368,7 @@
         this.form = {
           regId: null,
           patiName: null,
+          regCardNum: null,
           regDepts: null,
           regDocter: null,
           regPrice: null,

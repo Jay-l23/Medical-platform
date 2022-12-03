@@ -103,19 +103,19 @@
           </el-collapse>
         </el-card>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="8">
-        <el-card class="update-log">
-          <div slot="header" class="clearfix">
-            <span>微信二维码</span>
-          </div>
-          <div class="body">
-              <span style="display: inline-block; height: 30px; line-height: 30px">
-              有关我所知道的一切都愿与你交流
-              Talk is cheap show me the code
-            </span>
-          </div>
-        </el-card>
-      </el-col>
+<!--      <el-col :xs="24" :sm="24" :md="12" :lg="8">-->
+<!--        <el-card class="update-log">-->
+<!--          <div slot="header" class="clearfix">-->
+<!--            <span>微信二维码</span>-->
+<!--          </div>-->
+<!--          <div class="body">-->
+<!--              <span style="display: inline-block; height: 30px; line-height: 30px">-->
+<!--              有关我所知道的一切都愿与你交流-->
+<!--              Talk is cheap show me the code-->
+<!--            </span>-->
+<!--          </div>-->
+<!--        </el-card>-->
+<!--      </el-col>-->
     </el-row>
 
   </div>

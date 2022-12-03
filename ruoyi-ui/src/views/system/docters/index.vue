@@ -9,14 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="姓名" prop="dName">
-        <el-input
-          v-model="queryParams.dName"
-          placeholder="请输入姓名"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+<!--      <el-form-item label="姓名" prop="dName">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.dName"-->
+<!--          placeholder="请输入姓名"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="所属部门" prop="deptsId">
         <el-select v-model="queryParams.deptsId" placeholder="请选择所属部门" clearable>
           <el-option
@@ -27,32 +27,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="手机号" prop="dPhone">
-        <el-input
-          v-model="queryParams.dPhone"
-          placeholder="请输入手机号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="性别" prop="dSex">
-        <el-select v-model="queryParams.dSex" placeholder="请选择性别" clearable>
-          <el-option
-            v-for="dict in dict.type.sys_user_sex"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="年龄" prop="dAge">
-        <el-input
-          v-model="queryParams.dAge"
-          placeholder="请输入年龄"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="排班状态" prop="orderwork">
         <el-select v-model="queryParams.orderwork" placeholder="请选择排班状态" clearable>
           <el-option
@@ -63,16 +38,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="学历背景" prop="dEducationBg">
-        <el-select v-model="queryParams.dEducationBg" placeholder="请选择学历背景" clearable>
-          <el-option
-            v-for="dict in dict.type.sys_education"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -175,7 +141,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

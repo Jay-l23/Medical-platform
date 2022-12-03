@@ -25,6 +25,10 @@ public class HisReg extends BaseEntity
     @Excel(name = "患者姓名")
     private String patiName;
 
+    /** 身份证号 */
+    @Excel(name = "身份证号")
+    private String regCardNum;
+
     /** 挂号科室 */
     @Excel(name = "挂号科室")
     private String regDepts;
@@ -80,6 +84,15 @@ public class HisReg extends BaseEntity
     public String getPatiName() 
     {
         return patiName;
+    }
+    public void setRegCardNum(String regCardNum) 
+    {
+        this.regCardNum = regCardNum;
+    }
+
+    public String getRegCardNum() 
+    {
+        return regCardNum;
     }
     public void setRegDepts(String regDepts) 
     {
@@ -168,6 +181,7 @@ public class HisReg extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("regId", getRegId())
             .append("patiName", getPatiName())
+            .append("regCardNum", getRegCardNum())
             .append("regDepts", getRegDepts())
             .append("regDocter", getRegDocter())
             .append("regPrice", getRegPrice())

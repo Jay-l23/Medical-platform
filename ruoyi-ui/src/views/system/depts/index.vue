@@ -9,38 +9,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="科室名称" prop="deptsName">
-        <el-input
-          v-model="queryParams.deptsName"
-          placeholder="请输入科室名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="科室编码" prop="deptsCode">
-        <el-input
-          v-model="queryParams.deptsCode"
-          placeholder="请输入科室编码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="科室领导" prop="deptsLeader">
-        <el-input
-          v-model="queryParams.deptsLeader"
-          placeholder="请输入科室领导"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="科室电话" prop="deptsPhone">
-        <el-input
-          v-model="queryParams.deptsPhone"
-          placeholder="请输入科室电话"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item label="科室状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择科室状态" clearable>
           <el-option
@@ -51,14 +20,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建时间" prop="createTime">
-        <el-date-picker clearable
-          v-model="queryParams.createTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择创建时间">
-        </el-date-picker>
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
