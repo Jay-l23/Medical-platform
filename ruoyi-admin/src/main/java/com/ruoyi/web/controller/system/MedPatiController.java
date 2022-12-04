@@ -23,7 +23,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 患者库Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-11-04
  */

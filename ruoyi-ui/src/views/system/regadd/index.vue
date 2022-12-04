@@ -63,26 +63,6 @@
           <span>{{ scope.row.status==1?"上午":"下午"}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:reg:edit']"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:reg:remove']"
-          >删除
-          </el-button>
-        </template>
-      </el-table-column>
     </el-table>
 
 <!--    <pagination-->
@@ -147,30 +127,32 @@
 
     <br>
     <el-row>
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form :model="queryParamsDepts" ref="DeptqueryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
         <el-form-item label="科室编号" prop="deptsId">
           <el-input
-            v-model="queryParams.deptsId"
+            v-model="queryParamsDepts.deptsId"
             placeholder="请输入科室编号"
             clearable
-            @keyup.enter.native="handleQuery"
+            @keyup.enter.native="handleNodeClick"
           />
         </el-form-item>
 
         <el-form-item label="科室状态" prop="status">
-          <el-select v-model="queryParams.status" placeholder="请选择科室状态" clearable>
-            <el-option
-              v-for="dict in dict.type.sys_status"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            />
+          <el-select v-model="queryParamsDepts.status" placeholder="请选择科室状态" clearable>
+<!--            <el-option-->
+<!--              v-for="dict in dict.type.sys_status"-->
+<!--              :key="dict.value"-->
+<!--              :label="dict.label"-->
+<!--              :value="dict.value"-->
+<!--            />-->
+                <el-option label="值班中" value="1"></el-option>
+                <el-option label="空闲中" value="2"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleNodeClick">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQueryDepts">重置</el-button>
         </el-form-item>
       </el-form>
 
@@ -191,8 +173,8 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
+      :page.sync="queryParamsDepts.pageNum"
+      :limit.sync="queryParamsDepts.pageSize"
       @pagination="getDeptsList"
     />
 
@@ -285,7 +267,7 @@
         title: "",
         // 是否显示弹出层
         open: false,
-        // 查询参数
+        // 查询患者参数
         queryParams: {
           pageNum: 1,
           pageSize: 10,
@@ -300,6 +282,18 @@
           regType: null,
           regTime: null,
           regRdate: null,
+        },
+        //查询科室参数
+        queryParamsDepts: {
+          pageNum: 1,
+          pageSize: 10,
+          deptsId: null,
+          deptsName: null,
+          deptsCode: null,
+          deptsLeader: null,
+          deptsPhone: null,
+          status: null,
+          createTime: null,
         },
         // 表单参数
         form: {},
@@ -343,7 +337,7 @@
       /** 查询科室管理列表 */
       getDeptsList() {
         this.loading = true;
-        listDepts(this.queryParams).then(response => {
+        listDepts(this.queryParamsDepts).then(response => {
           this.deptsList = response.rows;
           this.total = response.total;
           this.loading = false;
@@ -385,9 +379,31 @@
         };
         this.resetForm("form");
       },
+      // 科室表单重置
+      deptsreset() {
+        this.form = {
+          deptsId: null,
+          deptsName: null,
+          deptsCode: null,
+          deptsNum: null,
+          deptsLeader: null,
+          deptsPhone: null,
+          status: 0,
+          createBy: null,
+          createTime: null,
+          updateBy: null,
+          updateTime: null
+        };
+        this.resetForm("form");
+      },
       /** 搜索按钮操作 */
       handleQuery() {
         this.queryParams.pageNum = 1;
+        this.getList();
+      },
+      /** 科室搜索按钮操作 */
+      handleNodeClick() {
+        this.queryParamsDepts.pageNum = 1;
         this.getList();
       },
       /** 重置按钮操作 */
@@ -395,27 +411,11 @@
         this.resetForm("queryForm");
         this.handleQuery();
       },
-      // 多选框选中数据
-      handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.regId)
-        this.single = selection.length !== 1
-        this.multiple = !selection.length
-      },
       /** 新增按钮操作 */
       handleAdd() {
         this.reset();
         this.open = true;
         this.title = "添加挂号列表";
-      },
-      /** 修改按钮操作 */
-      handleUpdate(row) {
-        this.reset();
-        const regId = row.regId || this.ids
-        getReg(regId).then(response => {
-          this.form = response.data;
-          this.open = true;
-          this.title = "修改挂号列表";
-        });
       },
       /** 提交按钮 */
       submitForm() {
@@ -435,17 +435,6 @@
               });
             }
           }
-        });
-      },
-      /** 删除按钮操作 */
-      handleDelete(row) {
-        const regIds = row.regId || this.ids;
-        this.$modal.confirm('是否确认删除挂号列表编号为"' + regIds + '"的数据项？').then(function () {
-          return delReg(regIds);
-        }).then(() => {
-          this.getList();
-          this.$modal.msgSuccess("删除成功");
-        }).catch(() => {
         });
       },
       /** 导出按钮操作 */

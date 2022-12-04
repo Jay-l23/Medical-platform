@@ -1,56 +1,31 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="厂家名称" prop="facName">
+      <el-form-item label="患者名称" prop="patiName">
         <el-input
-          v-model="queryParams.facName"
-          placeholder="请输入厂家名称"
+          v-model="queryParams.patiName"
+          placeholder="请输入患者名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="厂家编码" prop="facCode">
+      <el-form-item label="身份证" prop="patiCode">
         <el-input
-          v-model="queryParams.facCode"
-          placeholder="请输入厂家编码"
+          v-model="queryParams.patiCode"
+          placeholder="请输入患者身份证"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="联系人" prop="facContact">
+      <el-form-item label="患者电话" prop="patiPhone">
         <el-input
-          v-model="queryParams.facContact"
-          placeholder="请输入联系人"
+          v-model="queryParams.patiPhone"
+          placeholder="请输入患者电话"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="电话" prop="facTel">
-        <el-input
-          v-model="queryParams.facTel"
-          placeholder="请输入电话"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关键字" prop="facKey">
-        <el-input
-          v-model="queryParams.facKey"
-          placeholder="请输入关键字"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
-          <el-option
-            v-for="dict in dict.type.sys_factory_status"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -65,7 +40,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:factory:add']"
+          v-hasPermi="['system:pati:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -76,7 +51,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:factory:edit']"
+          v-hasPermi="['system:pati:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -87,7 +62,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:factory:remove']"
+          v-hasPermi="['system:pati:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -97,30 +72,41 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:factory:export']"
+          v-hasPermi="['system:pati:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="factoryList" border @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="厂家ID" align="center" prop="facId" width="80px"/>
-      <el-table-column label="厂家名称" align="center" prop="facName" width="200px"/>
-      <el-table-column label="厂家编码" align="center" prop="facCode" />
-      <el-table-column label="联系人" align="center" prop="facContact" />
-      <el-table-column label="电话" align="center" prop="facTel" />
-      <el-table-column label="关键字" align="center" prop="facKey" />
-      <el-table-column label="状态" align="center" prop="status">
+    <el-table v-loading="loading" :data="patiList" border @selection-change="handleSelectionChange">
+<!--      <el-table-column type="selection" width="55" align="center" />-->
+<!--      <el-table-column label="患者编号" align="center" prop="patiId" />-->
+      <el-table-column label="姓名" align="center" prop="patiName" />
+      <el-table-column label="身份证号" align="center" prop="patiCode" width="160" />
+      <el-table-column label="电话" align="center" prop="patiPhone" />
+      <el-table-column label="出生年月" align="center" prop="patiBirthday" width="150">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_factory_status" :value="scope.row.status"/>
+          <span>{{ parseTime(scope.row.patiBirthday, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column label="患者年龄" align="center" prop="patiAge" />
+      <el-table-column label="患者性别" align="center" prop="patiSex">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.patiSex"/>
         </template>
       </el-table-column>
+      <el-table-column label="患者过敏史" align="center" prop="patiAllergy" />
+      <el-table-column label="信息状态" align="center" prop="status">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_info_status" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
+<!--      <el-table-column label="创建时间" align="center" prop="createTime" width="180">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
+<!--      <el-table-column label="备注" align="center" prop="remark" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -128,14 +114,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:factory:edit']"
+            v-hasPermi="['system:pati:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:factory:remove']"
+            v-hasPermi="['system:pati:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -149,33 +135,51 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改生产厂商管理对话框 -->
+    <!-- 添加或修改患者库对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="厂家名称" prop="facName">
-          <el-input v-model="form.facName" placeholder="请输入厂家名称" />
+        <el-form-item label="姓名" prop="patiName">
+          <el-input v-model="form.patiName" placeholder="请输入患者名称" />
         </el-form-item>
-        <el-form-item label="厂家编码" prop="facCode">
-          <el-input v-model="form.facCode" placeholder="请输入厂家编码" />
+        <el-form-item label="身份证号" prop="patiCode">
+          <el-input v-model="form.patiCode" placeholder="请输入患者身份证" />
         </el-form-item>
-        <el-form-item label="联系人" prop="facContact">
-          <el-input v-model="form.facContact" placeholder="请输入联系人" />
+        <el-form-item label="患者电话" prop="patiPhone">
+          <el-input v-model="form.patiPhone" placeholder="请输入患者电话" />
         </el-form-item>
-        <el-form-item label="电话" prop="facTel">
-          <el-input v-model="form.facTel" placeholder="请输入电话" />
+        <el-form-item label="出生年月" prop="patiBirthday">
+          <el-date-picker clearable
+            v-model="form.patiBirthday"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择出生年月">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="关键字" prop="facKey">
-          <el-input v-model="form.facKey" placeholder="请输入关键字" />
+        <el-form-item label="患者年龄" prop="patiAge">
+          <el-input v-model="form.patiAge" placeholder="请输入患者年龄" />
         </el-form-item>
-        <el-form-item label="地址" prop="facAddress">
-          <el-input v-model="form.facAddress" placeholder="请输入地址" />
+        <el-form-item label="患者性别" prop="patiSex">
+          <el-select v-model="form.patiSex" placeholder="请选择患者性别">
+            <el-option
+              v-for="dict in dict.type.sys_user_sex"
+              :key="dict.value"
+              :label="dict.label"
+:value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="患者住址" prop="patiAddress">
+          <el-input v-model="form.patiAddress" placeholder="请输入患者住址" />
+        </el-form-item>
+        <el-form-item label="过敏史" prop="patiAllergy">
+          <el-input v-model="form.patiAllergy" placeholder="请输入患者过敏史" />
+        </el-form-item>
+        <el-form-item label="信息状态">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in dict.type.sys_factory_status"
+              v-for="dict in dict.type.sys_info_status"
               :key="dict.value"
-:label="parseInt(dict.value)"
+:label="dict.value"
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -187,16 +191,17 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
+
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { listFactory, getFactory, delFactory, addFactory, updateFactory } from "@/api/system/factory";
+import { listPati, getPati, delPati, addPati, updatePati } from "@/api/system/pati";
 
 export default {
-  name: "Factory",
-  dicts: ['sys_factory_status'],
+  name: "Pati",
+  dicts: ['sys_info_status', 'sys_user_sex'],
   data() {
     return {
       // 遮罩层
@@ -211,8 +216,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 生产厂商管理表格数据
-      factoryList: [],
+      // 患者库表格数据
+      patiList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -221,28 +226,21 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        facName: null,
-        facCode: null,
-        facContact: null,
-        facTel: null,
-        facKey: null,
+        patiName: null,
+        patiCode: null,
+        patiPhone: null,
+        patiBirthday: null,
+        patiAge: null,
+        patiSex: null,
+        patiAllergy: null,
         status: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        facName: [
-          { required: true, message: "厂家名称不能为空", trigger: "blur" }
-        ],
-        facTel: [
-          { required: true, message: "电话不能为空", trigger: "blur" }
-        ],
-        facKey: [
-          { required: true, message: "关键字不能为空", trigger: "blur" }
-        ],
-        facAddress: [
-          { required: true, message: "地址不能为空", trigger: "blur" }
+        patiName: [
+          { required: true, message: "患者名称不能为空", trigger: "blur" }
         ],
       }
     };
@@ -251,11 +249,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询生产厂商管理列表 */
+    /** 查询患者库列表 */
     getList() {
       this.loading = true;
-      listFactory(this.queryParams).then(response => {
-        this.factoryList = response.rows;
+      listPati(this.queryParams).then(response => {
+        this.patiList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -268,14 +266,16 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        facId: null,
-        facName: null,
-        facCode: null,
-        facContact: null,
-        facTel: null,
-        facKey: null,
-        facAddress: null,
-        status: 0,
+        patiId: null,
+        patiName: null,
+        patiCode: null,
+        patiPhone: null,
+        patiBirthday: null,
+        patiAge: null,
+        patiSex: null,
+        patiAddress: null,
+        patiAllergy: null,
+        status: "0",
         createBy: null,
         createTime: null,
         updateBy: null,
@@ -296,7 +296,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.facId)
+      this.ids = selection.map(item => item.patiId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -304,30 +304,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加生产厂商管理";
+      this.title = "添加患者库";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const facId = row.facId || this.ids
-      getFactory(facId).then(response => {
+      const patiId = row.patiId || this.ids
+      getPati(patiId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改生产厂商管理";
+        this.title = "修改患者库";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.facId != null) {
-            updateFactory(this.form).then(response => {
+          if (this.form.patiId != null) {
+            updatePati(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addFactory(this.form).then(response => {
+            addPati(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -338,9 +338,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const facIds = row.facId || this.ids;
-      this.$modal.confirm('是否确认删除生产厂商管理编号为"' + facIds + '"的数据项？').then(function() {
-        return delFactory(facIds);
+      const patiIds = row.patiId || this.ids;
+      this.$modal.confirm('是否确认删除患者库编号为"' + patiIds + '"的数据项？').then(function() {
+        return delPati(patiIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -348,9 +348,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/factory/export', {
+      this.download('system/pati/export', {
         ...this.queryParams
-      }, `factory_${new Date().getTime()}.xlsx`)
+      }, `pati_${new Date().getTime()}.xlsx`)
     }
   }
 };

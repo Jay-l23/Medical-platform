@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container">
 
     <div class="app-container home">
-      <el-row :gutter="20">
+      <el-row :gutter="20" style="color: #676a6c">
         <el-col :sm="24" :lg="12" style="padding-left: 20px">
           <h2>医疗信息管理系统</h2>
           <p>
@@ -13,9 +13,7 @@
               size="mini"
               icon="el-icon-cloudy"
               plain
-              @click="goTarget('https://gitee.com/lijie2002211329')"
-            >访问码云</el-button
-            >
+              @click="goTarget('https://gitee.com/lijie2002211329')">访问码云</el-button>
           </p>
         </el-col>
       </el-row>
