@@ -1,31 +1,39 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="科室名称" prop="deptsName">
+      <el-form-item label="订单编号" prop="purOrderId">
         <el-input
-          v-model="queryParams.deptsName"
-          placeholder="请输入科室名称"
+          v-model="queryParams.purOrderId"
+          placeholder="请输入订单编号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="科室编码" prop="deptsCode">
+      <el-form-item label="订单总额" prop="purCount">
         <el-input
-          v-model="queryParams.deptsCode"
-          placeholder="请输入科室编码"
+          v-model="queryParams.purCount"
+          placeholder="请输入订单总额"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="科室状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择科室状态" clearable>
+      <el-form-item label="审核状态" prop="purVerify">
+        <el-select v-model="queryParams.purVerify" placeholder="请选择审核状态" clearable>
           <el-option
-            v-for="dict in dict.type.sys_status"
+            v-for="dict in dict.type.his_purchase"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="供应商ID" prop="supName">
+        <el-input
+          v-model="queryParams.supName"
+          placeholder="请输入供应商ID"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -41,7 +49,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['his:depts:add']"
+          v-hasPermi="['system:purchase:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -52,7 +60,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['his:depts:edit']"
+          v-hasPermi="['system:purchase:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,7 +71,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['his:depts:remove']"
+          v-hasPermi="['system:purchase:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -73,25 +81,29 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['his:depts:export']"
+          v-hasPermi="['system:purchase:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="deptsList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="purchaseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="科室编号" align="center" prop="deptsId" />
-      <el-table-column label="科室名称" align="center" prop="deptsName" />
-      <el-table-column label="科室编码" align="center" prop="deptsCode" />
-      <el-table-column label="科室挂号" align="center" prop="deptsNum" />
-      <el-table-column label="科室领导" align="center" prop="deptsLeader" />
-      <el-table-column label="科室电话" align="center" prop="deptsPhone" />
-      <el-table-column label="科室状态" align="center" prop="status">
+      <el-table-column label="订单编号" align="center" prop="purOrderId" />
+      <el-table-column label="订单总额" align="center" prop="purCount" />
+      <el-table-column label="审核状态" align="center" prop="purVerify">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.his_purchase" :value="scope.row.purVerify"/>
         </template>
       </el-table-column>
+      <el-table-column label="供应商ID" align="center" prop="supName" />
+      <el-table-column label="创建者" align="center" prop="createBy" />
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -99,19 +111,19 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['his:depts:edit']"
+            v-hasPermi="['system:purchase:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['his:depts:remove']"
+            v-hasPermi="['system:purchase:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -120,33 +132,30 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改科室管理对话框 -->
+    <!-- 添加或修改采购入库对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="科室名称" prop="deptsName">
-          <el-input v-model="form.deptsName" placeholder="请输入科室名称" />
+        <el-form-item label="订单编号" prop="purOrderId">
+          <el-input v-model="form.purOrderId" placeholder="请输入订单编号" />
         </el-form-item>
-        <el-form-item label="科室编码" prop="deptsCode">
-          <el-input v-model="form.deptsCode" placeholder="请输入科室编码" />
+        <el-form-item label="订单总额" prop="purCount">
+          <el-input v-model="form.purCount" placeholder="请输入订单总额" />
         </el-form-item>
-        <el-form-item label="科室挂号" prop="deptsNum">
-          <el-input v-model="form.deptsNum" placeholder="请输入科室挂号" />
-        </el-form-item>
-        <el-form-item label="科室领导" prop="deptsLeader">
-          <el-input v-model="form.deptsLeader" placeholder="请输入科室领导" />
-        </el-form-item>
-        <el-form-item label="科室电话" prop="deptsPhone">
-          <el-input v-model="form.deptsPhone" placeholder="请输入科室电话" />
-        </el-form-item>
-        <el-form-item label="科室状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择科室状态">
+        <el-form-item label="审核状态" prop="purVerify">
+          <el-select v-model="form.purVerify" placeholder="请选择审核状态">
             <el-option
-              v-for="dict in dict.type.sys_status"
+              v-for="dict in dict.type.his_purchase"
               :key="dict.value"
               :label="dict.label"
 :value="parseInt(dict.value)"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="供应商ID" prop="supName">
+          <el-input v-model="form.supName" placeholder="请输入供应商ID" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -158,11 +167,11 @@
 </template>
 
 <script>
-import { listDepts, getDepts, delDepts, addDepts, updateDepts } from "@/api/his/depts";
+import { listPurchase, getPurchase, delPurchase, addPurchase, updatePurchase } from "@/api/system/purchase";
 
 export default {
-  name: "Depts",
-  dicts: ['sys_status'],
+  name: "Purchase",
+  dicts: ['his_purchase'],
   data() {
     return {
       // 遮罩层
@@ -177,8 +186,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 科室管理表格数据
-      deptsList: [],
+      // 采购入库表格数据
+      purchaseList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -187,26 +196,15 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        deptsName: null,
-        deptsCode: null,
-        status: null,
+        purOrderId: null,
+        purCount: null,
+        purVerify: null,
+        supName: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        deptsName: [
-          { required: true, message: "科室名称不能为空", trigger: "blur" }
-        ],
-        deptsCode: [
-          { required: true, message: "科室编码不能为空", trigger: "blur" }
-        ],
-        deptsNum: [
-          { required: true, message: "科室挂号不能为空", trigger: "blur" }
-        ],
-        status: [
-          { required: true, message: "科室状态不能为空", trigger: "change" }
-        ],
       }
     };
   },
@@ -214,11 +212,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询科室管理列表 */
+    /** 查询采购入库列表 */
     getList() {
       this.loading = true;
-      listDepts(this.queryParams).then(response => {
-        this.deptsList = response.rows;
+      listPurchase(this.queryParams).then(response => {
+        this.purchaseList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -231,17 +229,15 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        deptsId: null,
-        deptsName: null,
-        deptsCode: null,
-        deptsNum: null,
-        deptsLeader: null,
-        deptsPhone: null,
-        status: null,
+        purOrderId: null,
+        purCount: null,
+        purVerify: null,
+        supName: null,
         createBy: null,
         createTime: null,
         updateBy: null,
-        updateTime: null
+        updateTime: null,
+        remark: null
       };
       this.resetForm("form");
     },
@@ -257,7 +253,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.deptsId)
+      this.ids = selection.map(item => item.purOrderId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -265,30 +261,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加科室管理";
+      this.title = "添加采购入库";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const deptsId = row.deptsId || this.ids
-      getDepts(deptsId).then(response => {
+      const purOrderId = row.purOrderId || this.ids
+      getPurchase(purOrderId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改科室管理";
+        this.title = "修改采购入库";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.deptsId != null) {
-            updateDepts(this.form).then(response => {
+          if (this.form.purOrderId != null) {
+            updatePurchase(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addDepts(this.form).then(response => {
+            addPurchase(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -299,9 +295,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const deptsIds = row.deptsId || this.ids;
-      this.$modal.confirm('是否确认删除科室管理编号为"' + deptsIds + '"的数据项？').then(function() {
-        return delDepts(deptsIds);
+      const purOrderIds = row.purOrderId || this.ids;
+      this.$modal.confirm('是否确认删除采购入库编号为"' + purOrderIds + '"的数据项？').then(function() {
+        return delPurchase(purOrderIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -309,9 +305,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('his/depts/export', {
+      this.download('system/purchase/export', {
         ...this.queryParams
-      }, `depts_${new Date().getTime()}.xlsx`)
+      }, `purchase_${new Date().getTime()}.xlsx`)
     }
   }
 };

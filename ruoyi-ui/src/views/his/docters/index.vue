@@ -1,26 +1,54 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="科室名称" prop="deptsName">
+      <el-form-item label="医生姓名" prop="dName">
         <el-input
-          v-model="queryParams.deptsName"
-          placeholder="请输入科室名称"
+          v-model="queryParams.dName"
+          placeholder="请输入医生姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="科室编码" prop="deptsCode">
-        <el-input
-          v-model="queryParams.deptsCode"
-          placeholder="请输入科室编码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="科室状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择科室状态" clearable>
+      <el-form-item label="所属部门" prop="deptsId">
+        <el-select v-model="queryParams.deptsId" placeholder="请选择所属部门" clearable>
           <el-option
-            v-for="dict in dict.type.sys_status"
+            v-for="dict in dict.type.sys_depts"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="医生手机" prop="dPhone">
+        <el-input
+          v-model="queryParams.dPhone"
+          placeholder="请输入医生手机"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="医生性别" prop="dSex">
+        <el-select v-model="queryParams.dSex" placeholder="请选择医生性别" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_user_sex"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="医生年龄" prop="dAge">
+        <el-input
+          v-model="queryParams.dAge"
+          placeholder="请输入医生年龄"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="学历背景" prop="dEducationBg">
+        <el-select v-model="queryParams.dEducationBg" placeholder="请选择学历背景" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_education"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -41,7 +69,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['his:depts:add']"
+          v-hasPermi="['his:docters:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -52,7 +80,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['his:depts:edit']"
+          v-hasPermi="['his:docters:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,7 +91,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['his:depts:remove']"
+          v-hasPermi="['his:docters:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -73,23 +101,32 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['his:depts:export']"
+          v-hasPermi="['his:docters:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="deptsList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="doctersList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="科室编号" align="center" prop="deptsId" />
-      <el-table-column label="科室名称" align="center" prop="deptsName" />
-      <el-table-column label="科室编码" align="center" prop="deptsCode" />
-      <el-table-column label="科室挂号" align="center" prop="deptsNum" />
-      <el-table-column label="科室领导" align="center" prop="deptsLeader" />
-      <el-table-column label="科室电话" align="center" prop="deptsPhone" />
-      <el-table-column label="科室状态" align="center" prop="status">
+      <el-table-column label="医生编号" align="center" prop="dId" />
+      <el-table-column label="医生姓名" align="center" prop="dName" />
+      <el-table-column label="所属部门" align="center" prop="deptsId">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_depts" :value="scope.row.deptsId"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="医生手机" align="center" prop="dPhone" />
+      <el-table-column label="医生性别" align="center" prop="dSex">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.dSex"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="医生年龄" align="center" prop="dAge" />
+      <el-table-column label="是否排班" align="center" prop="orderwork" />
+      <el-table-column label="学历背景" align="center" prop="dEducationBg">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_education" :value="scope.row.dEducationBg"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -99,14 +136,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['his:depts:edit']"
+            v-hasPermi="['his:docters:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['his:depts:remove']"
+            v-hasPermi="['his:docters:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -120,28 +157,42 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改科室管理对话框 -->
+    <!-- 添加或修改医生管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="科室名称" prop="deptsName">
-          <el-input v-model="form.deptsName" placeholder="请输入科室名称" />
+        <el-form-item label="医生姓名" prop="dName">
+          <el-input v-model="form.dName" placeholder="请输入医生姓名" />
         </el-form-item>
-        <el-form-item label="科室编码" prop="deptsCode">
-          <el-input v-model="form.deptsCode" placeholder="请输入科室编码" />
-        </el-form-item>
-        <el-form-item label="科室挂号" prop="deptsNum">
-          <el-input v-model="form.deptsNum" placeholder="请输入科室挂号" />
-        </el-form-item>
-        <el-form-item label="科室领导" prop="deptsLeader">
-          <el-input v-model="form.deptsLeader" placeholder="请输入科室领导" />
-        </el-form-item>
-        <el-form-item label="科室电话" prop="deptsPhone">
-          <el-input v-model="form.deptsPhone" placeholder="请输入科室电话" />
-        </el-form-item>
-        <el-form-item label="科室状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择科室状态">
+        <el-form-item label="所属部门" prop="deptsId">
+          <el-select v-model="form.deptsId" placeholder="请选择所属部门">
             <el-option
-              v-for="dict in dict.type.sys_status"
+              v-for="dict in dict.type.sys_depts"
+              :key="dict.value"
+              :label="dict.label"
+:value="parseInt(dict.value)"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="医生手机" prop="dPhone">
+          <el-input v-model="form.dPhone" placeholder="请输入医生手机" />
+        </el-form-item>
+        <el-form-item label="医生性别" prop="dSex">
+          <el-select v-model="form.dSex" placeholder="请选择医生性别">
+            <el-option
+              v-for="dict in dict.type.sys_user_sex"
+              :key="dict.value"
+              :label="dict.label"
+:value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="医生年龄" prop="dAge">
+          <el-input v-model="form.dAge" placeholder="请输入医生年龄" />
+        </el-form-item>
+        <el-form-item label="学历背景" prop="dEducationBg">
+          <el-select v-model="form.dEducationBg" placeholder="请选择学历背景">
+            <el-option
+              v-for="dict in dict.type.sys_education"
               :key="dict.value"
               :label="dict.label"
 :value="parseInt(dict.value)"
@@ -158,11 +209,11 @@
 </template>
 
 <script>
-import { listDepts, getDepts, delDepts, addDepts, updateDepts } from "@/api/his/depts";
+import { listDocters, getDocters, delDocters, addDocters, updateDocters } from "@/api/his/docters";
 
 export default {
-  name: "Depts",
-  dicts: ['sys_status'],
+  name: "Docters",
+  dicts: ['sys_education', 'sys_user_sex', 'sys_depts'],
   data() {
     return {
       // 遮罩层
@@ -177,8 +228,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 科室管理表格数据
-      deptsList: [],
+      // 医生管理表格数据
+      doctersList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -187,25 +238,20 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        deptsName: null,
-        deptsCode: null,
-        status: null,
+        dName: null,
+        deptsId: null,
+        dPhone: null,
+        dSex: null,
+        dAge: null,
+        orderwork: null,
+        dEducationBg: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        deptsName: [
-          { required: true, message: "科室名称不能为空", trigger: "blur" }
-        ],
-        deptsCode: [
-          { required: true, message: "科室编码不能为空", trigger: "blur" }
-        ],
-        deptsNum: [
-          { required: true, message: "科室挂号不能为空", trigger: "blur" }
-        ],
-        status: [
-          { required: true, message: "科室状态不能为空", trigger: "change" }
+        dName: [
+          { required: true, message: "医生姓名不能为空", trigger: "blur" }
         ],
       }
     };
@@ -214,11 +260,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询科室管理列表 */
+    /** 查询医生管理列表 */
     getList() {
       this.loading = true;
-      listDepts(this.queryParams).then(response => {
-        this.deptsList = response.rows;
+      listDocters(this.queryParams).then(response => {
+        this.doctersList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -231,17 +277,15 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        dId: null,
+        dName: null,
         deptsId: null,
-        deptsName: null,
-        deptsCode: null,
-        deptsNum: null,
-        deptsLeader: null,
-        deptsPhone: null,
-        status: null,
-        createBy: null,
-        createTime: null,
-        updateBy: null,
-        updateTime: null
+        dPhone: null,
+        dSex: null,
+        dAge: null,
+        orderwork: null,
+        dEducationBg: null,
+        createTime: null
       };
       this.resetForm("form");
     },
@@ -257,7 +301,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.deptsId)
+      this.ids = selection.map(item => item.dId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -265,30 +309,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加科室管理";
+      this.title = "添加医生管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const deptsId = row.deptsId || this.ids
-      getDepts(deptsId).then(response => {
+      const dId = row.dId || this.ids
+      getDocters(dId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改科室管理";
+        this.title = "修改医生管理";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.deptsId != null) {
-            updateDepts(this.form).then(response => {
+          if (this.form.dId != null) {
+            updateDocters(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addDepts(this.form).then(response => {
+            addDocters(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -299,9 +343,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const deptsIds = row.deptsId || this.ids;
-      this.$modal.confirm('是否确认删除科室管理编号为"' + deptsIds + '"的数据项？').then(function() {
-        return delDepts(deptsIds);
+      const dIds = row.dId || this.ids;
+      this.$modal.confirm('是否确认删除医生管理编号为"' + dIds + '"的数据项？').then(function() {
+        return delDocters(dIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -309,9 +353,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('his/depts/export', {
+      this.download('his/docters/export', {
         ...this.queryParams
-      }, `depts_${new Date().getTime()}.xlsx`)
+      }, `docters_${new Date().getTime()}.xlsx`)
     }
   }
 };

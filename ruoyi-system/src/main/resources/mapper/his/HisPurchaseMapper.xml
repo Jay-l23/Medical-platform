@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.his.mapper.HisPurchaseMapper">
+    
+    <resultMap type="HisPurchase" id="HisPurchaseResult">
+        <result property="purId"    column="pur_id"    />
+        <result property="purCount"    column="pur_count"    />
+        <result property="purVerify"    column="pur_verify"    />
+        <result property="supName"    column="sup_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHisPurchaseVo">
+        select pur_id, pur_count, pur_verify, sup_name, create_by, create_time, update_by, update_time, remark from his_purchase
+    </sql>
+
+    <select id="selectHisPurchaseList" parameterType="HisPurchase" resultMap="HisPurchaseResult">
+        <include refid="selectHisPurchaseVo"/>
+        <where>  
+            <if test="purId != null  and purId != ''"> and pur_id = #{purId}</if>
+            <if test="purCount != null "> and pur_count = #{purCount}</if>
+            <if test="purVerify != null "> and pur_verify = #{purVerify}</if>
+            <if test="supName != null  and supName != ''"> and sup_name like concat('%', #{supName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectHisPurchaseByPurId" parameterType="String" resultMap="HisPurchaseResult">
+        <include refid="selectHisPurchaseVo"/>
+        where pur_id = #{purId}
+    </select>
+        
+    <insert id="insertHisPurchase" parameterType="HisPurchase">
+        insert into his_purchase
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="purId != null">pur_id,</if>
+            <if test="purCount != null">pur_count,</if>
+            <if test="purVerify != null">pur_verify,</if>
+            <if test="supName != null">sup_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="purId != null">#{purId},</if>
+            <if test="purCount != null">#{purCount},</if>
+            <if test="purVerify != null">#{purVerify},</if>
+            <if test="supName != null">#{supName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHisPurchase" parameterType="HisPurchase">
+        update his_purchase
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="purCount != null">pur_count = #{purCount},</if>
+            <if test="purVerify != null">pur_verify = #{purVerify},</if>
+            <if test="supName != null">sup_name = #{supName},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where pur_id = #{purId}
+    </update>
+
+    <delete id="deleteHisPurchaseByPurId" parameterType="String">
+        delete from his_purchase where pur_id = #{purId}
+    </delete>
+
+    <delete id="deleteHisPurchaseByPurIds" parameterType="String">
+        delete from his_purchase where pur_id in 
+        <foreach item="purId" collection="array" open="(" separator="," close=")">
+            #{purId}
+        </foreach>
+    </delete>
+</mapper>
