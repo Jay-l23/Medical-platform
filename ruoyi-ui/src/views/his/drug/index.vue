@@ -1,36 +1,34 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="订单编号" prop="purOrderId">
+      <el-form-item label="药品ID" prop="drugId">
         <el-input
-          v-model="queryParams.purOrderId"
-          placeholder="请输入订单编号"
+          v-model="queryParams.drugId"
+          placeholder="请输入药品ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="订单总额" prop="purCount">
+      <el-form-item label="采购数量" prop="purNumbers">
         <el-input
-          v-model="queryParams.purCount"
-          placeholder="请输入订单总额"
+          v-model="queryParams.purNumbers"
+          placeholder="请输入采购数量"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="审核状态" prop="purVerify">
-        <el-select v-model="queryParams.purVerify" placeholder="请选择审核状态" clearable>
-          <el-option
-            v-for="dict in dict.type.his_purchase"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="供应商ID" prop="supId">
+      <el-form-item label="批次号" prop="purId">
         <el-input
-          v-model="queryParams.supId"
-          placeholder="请输入供应商ID"
+          v-model="queryParams.purId"
+          placeholder="请输入批次号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="药品批发单价" prop="purPrice">
+        <el-input
+          v-model="queryParams.purPrice"
+          placeholder="请输入药品批发单价"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -49,7 +47,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['his:purchase:add']"
+          v-hasPermi="['his:drug:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -60,7 +58,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['his:purchase:edit']"
+          v-hasPermi="['his:drug:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,7 +69,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['his:purchase:remove']"
+          v-hasPermi="['his:drug:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -81,22 +79,19 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['his:purchase:export']"
+          v-hasPermi="['his:drug:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="purchaseList"  border @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="drugList"  @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="订单编号" align="center" prop="purOrderId" />
-      <el-table-column label="订单总额" align="center" prop="purCount" />
-      <el-table-column label="审核状态" align="center" prop="purVerify">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.his_purchase" :value="scope.row.purVerify"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="供应商ID" align="center" prop="supId" />
+      <el-table-column label="药品ID" align="center" prop="drugId" />
+      <el-table-column label="采购数量" align="center" prop="purNumbers" />
+      <el-table-column label="批次号" align="center" prop="purId" />
+      <el-table-column label="药品批发单价" align="center" prop="purPrice" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -105,14 +100,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['his:purchase:edit']"
+            v-hasPermi="['his:drug:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['his:purchase:remove']"
+            v-hasPermi="['his:drug:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -126,27 +121,20 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改采购入库对话框 -->
+    <!-- 添加或修改药品订单关联测试对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="订单编号" prop="purOrderId">
-          <el-input v-model="form.purOrderId" placeholder="请输入订单编号" />
+        <el-form-item label="药品ID" prop="drugId">
+          <el-input v-model="form.drugId" placeholder="请输入药品ID" />
         </el-form-item>
-        <el-form-item label="订单总额" prop="purCount">
-          <el-input v-model="form.purCount" placeholder="请输入订单总额" />
+        <el-form-item label="采购数量" prop="purNumbers">
+          <el-input v-model="form.purNumbers" placeholder="请输入采购数量" />
         </el-form-item>
-        <el-form-item label="审核状态" prop="purVerify">
-          <el-select v-model="form.purVerify" placeholder="请选择审核状态">
-            <el-option
-              v-for="dict in dict.type.his_purchase"
-              :key="dict.value"
-              :label="dict.label"
-:value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
+        <el-form-item label="批次号" prop="purId">
+          <el-input v-model="form.purId" placeholder="请输入批次号" />
         </el-form-item>
-        <el-form-item label="供应商ID" prop="supId">
-          <el-input v-model="form.supId" placeholder="请输入供应商ID" />
+        <el-form-item label="药品批发单价" prop="purPrice">
+          <el-input v-model="form.purPrice" placeholder="请输入药品批发单价" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
@@ -161,11 +149,10 @@
 </template>
 
 <script>
-import { listPurchase, getPurchase, delPurchase, addPurchase, updatePurchase } from "@/api/his/purchase";
+import { listDrug, getDrug, delDrug, addDrug, updateDrug } from "@/api/his/drug";
 
 export default {
-  name: "Purchase",
-  dicts: ['his_purchase'],
+  name: "Drug",
   data() {
     return {
       // 遮罩层
@@ -180,8 +167,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 采购入库表格数据
-      purchaseList: [],
+      // 药品订单关联测试表格数据
+      drugList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -190,15 +177,18 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        purOrderId: null,
-        purCount: null,
-        purVerify: null,
-        supId: null,
+        drugId: null,
+        purNumbers: null,
+        purId: null,
+        purPrice: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        drugId: [
+          { required: true, message: "药品ID不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -206,11 +196,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询采购入库列表 */
+    /** 查询药品订单关联测试列表 */
     getList() {
       this.loading = true;
-      listPurchase(this.queryParams).then(response => {
-        this.purchaseList = response.rows;
+      listDrug(this.queryParams).then(response => {
+        this.drugList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -224,9 +214,10 @@ export default {
     reset() {
       this.form = {
         purOrderId: null,
-        purCount: null,
-        purVerify: null,
-        supId: null,
+        drugId: null,
+        purNumbers: null,
+        purId: null,
+        purPrice: null,
         createBy: null,
         createTime: null,
         updateBy: null,
@@ -255,16 +246,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加采购入库";
+      this.title = "添加药品订单关联测试";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const purOrderId = row.purOrderId || this.ids
-      getPurchase(purOrderId).then(response => {
+      getDrug(purOrderId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改采购入库";
+        this.title = "修改药品订单关联测试";
       });
     },
     /** 提交按钮 */
@@ -272,13 +263,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.purOrderId != null) {
-            updatePurchase(this.form).then(response => {
+            updateDrug(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addPurchase(this.form).then(response => {
+            addDrug(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -290,8 +281,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const purOrderIds = row.purOrderId || this.ids;
-      this.$modal.confirm('是否确认删除采购入库编号为"' + purOrderIds + '"的数据项？').then(function() {
-        return delPurchase(purOrderIds);
+      this.$modal.confirm('是否确认删除药品订单关联测试编号为"' + purOrderIds + '"的数据项？').then(function() {
+        return delDrug(purOrderIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -299,9 +290,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('his/purchase/export', {
+      this.download('his/drug/export', {
         ...this.queryParams
-      }, `purchase_${new Date().getTime()}.xlsx`)
+      }, `drug_${new Date().getTime()}.xlsx`)
     }
   }
 };

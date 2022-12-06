@@ -103,7 +103,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="drugList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="drugList" border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="药品ID" align="center" prop="drugId" />
       <el-table-column label="药品名称" align="center" prop="drugName" />

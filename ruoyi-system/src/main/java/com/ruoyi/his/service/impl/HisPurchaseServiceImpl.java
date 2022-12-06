@@ -12,7 +12,7 @@ import com.ruoyi.his.service.IHisPurchaseService;
  * 采购入库Service业务层处理
  * 
  * @author ruoyi
- * @date 2022-12-05
+ * @date 2022-12-06
  */
 @Service
 public class HisPurchaseServiceImpl implements IHisPurchaseService 
@@ -23,13 +23,13 @@ public class HisPurchaseServiceImpl implements IHisPurchaseService
     /**
      * 查询采购入库
      * 
-     * @param purId 采购入库主键
+     * @param purOrderId 采购入库主键
      * @return 采购入库
      */
     @Override
-    public HisPurchase selectHisPurchaseByPurId(String purId)
+    public HisPurchase selectHisPurchaseByPurOrderId(String purOrderId)
     {
-        return hisPurchaseMapper.selectHisPurchaseByPurId(purId);
+        return hisPurchaseMapper.selectHisPurchaseByPurOrderId(purOrderId);
     }
 
     /**
@@ -73,24 +73,24 @@ public class HisPurchaseServiceImpl implements IHisPurchaseService
     /**
      * 批量删除采购入库
      * 
-     * @param purIds 需要删除的采购入库主键
+     * @param purOrderIds 需要删除的采购入库主键
      * @return 结果
      */
     @Override
-    public int deleteHisPurchaseByPurIds(String[] purIds)
+    public int deleteHisPurchaseByPurOrderIds(String[] purOrderIds)
     {
-        return hisPurchaseMapper.deleteHisPurchaseByPurIds(purIds);
+        return hisPurchaseMapper.deleteHisPurchaseByPurOrderIds(purOrderIds);
     }
 
     /**
      * 删除采购入库信息
      * 
-     * @param purId 采购入库主键
+     * @param purOrderId 采购入库主键
      * @return 结果
      */
     @Override
-    public int deleteHisPurchaseByPurId(String purId)
+    public int deleteHisPurchaseByPurOrderId(String purOrderId)
     {
-        return hisPurchaseMapper.deleteHisPurchaseByPurId(purId);
+        return hisPurchaseMapper.deleteHisPurchaseByPurOrderId(purOrderId);
     }
 }

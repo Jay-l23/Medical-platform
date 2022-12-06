@@ -1,4 +1,4 @@
-package com.ruoyi.his.controller;
+package com.ruoyi.web.his;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 采购入库Controller
  * 
  * @author ruoyi
- * @date 2022-12-05
+ * @date 2022-12-06
  */
 @RestController
 @RequestMapping("/his/purchase")
@@ -63,10 +63,10 @@ public class HisPurchaseController extends BaseController
      * 获取采购入库详细信息
      */
     @PreAuthorize("@ss.hasPermi('his:purchase:query')")
-    @GetMapping(value = "/{purId}")
-    public AjaxResult getInfo(@PathVariable("purId") String purId)
+    @GetMapping(value = "/{purOrderId}")
+    public AjaxResult getInfo(@PathVariable("purOrderId") String purOrderId)
     {
-        return success(hisPurchaseService.selectHisPurchaseByPurId(purId));
+        return success(hisPurchaseService.selectHisPurchaseByPurOrderId(purOrderId));
     }
 
     /**
@@ -96,9 +96,9 @@ public class HisPurchaseController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('his:purchase:remove')")
     @Log(title = "采购入库", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{purIds}")
-    public AjaxResult remove(@PathVariable String[] purIds)
+	@DeleteMapping("/{purOrderIds}")
+    public AjaxResult remove(@PathVariable String[] purOrderIds)
     {
-        return toAjax(hisPurchaseService.deleteHisPurchaseByPurIds(purIds));
+        return toAjax(hisPurchaseService.deleteHisPurchaseByPurOrderIds(purOrderIds));
     }
 }

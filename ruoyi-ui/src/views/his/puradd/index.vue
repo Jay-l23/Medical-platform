@@ -49,7 +49,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['his:purchase:add']"
+          v-hasPermi="['his:puradd:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -60,7 +60,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['his:purchase:edit']"
+          v-hasPermi="['his:puradd:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,7 +71,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['his:purchase:remove']"
+          v-hasPermi="['his:puradd:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -81,13 +81,13 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['his:purchase:export']"
+          v-hasPermi="['his:puradd:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="purchaseList"  border @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="puraddList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="订单编号" align="center" prop="purOrderId" />
       <el-table-column label="订单总额" align="center" prop="purCount" />
@@ -105,14 +105,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['his:purchase:edit']"
+            v-hasPermi="['his:puradd:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['his:purchase:remove']"
+            v-hasPermi="['his:puradd:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -126,7 +126,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改采购入库对话框 -->
+    <!-- 添加或修改提交订单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="订单编号" prop="purOrderId">
@@ -161,10 +161,10 @@
 </template>
 
 <script>
-import { listPurchase, getPurchase, delPurchase, addPurchase, updatePurchase } from "@/api/his/purchase";
+import { listPuradd, getPuradd, delPuradd, addPuradd, updatePuradd } from "@/api/his/puradd";
 
 export default {
-  name: "Purchase",
+  name: "Puradd",
   dicts: ['his_purchase'],
   data() {
     return {
@@ -180,8 +180,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 采购入库表格数据
-      purchaseList: [],
+      // 提交订单表格数据
+      puraddList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -206,11 +206,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询采购入库列表 */
+    /** 查询提交订单列表 */
     getList() {
       this.loading = true;
-      listPurchase(this.queryParams).then(response => {
-        this.purchaseList = response.rows;
+      listPuradd(this.queryParams).then(response => {
+        this.puraddList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -255,43 +255,33 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加采购入库";
+      this.title = "添加提交订单";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const purOrderId = row.purOrderId || this.ids
-      getPurchase(purOrderId).then(response => {
+      getPuradd(purOrderId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改采购入库";
+        this.title = "修改提交订单";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.purOrderId != null) {
-            updatePurchase(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addPurchase(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
+        addPuradd(this.form).then(response => {
+          this.$modal.msgSuccess("新增成功");
+          this.open = false;
+          this.getList();
+        });
       });
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       const purOrderIds = row.purOrderId || this.ids;
-      this.$modal.confirm('是否确认删除采购入库编号为"' + purOrderIds + '"的数据项？').then(function() {
-        return delPurchase(purOrderIds);
+      this.$modal.confirm('是否确认删除提交订单编号为"' + purOrderIds + '"的数据项？').then(function() {
+        return delPuradd(purOrderIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -299,9 +289,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('his/purchase/export', {
+      this.download('his/puradd/export', {
         ...this.queryParams
-      }, `purchase_${new Date().getTime()}.xlsx`)
+      }, `puradd_${new Date().getTime()}.xlsx`)
     }
   }
 };

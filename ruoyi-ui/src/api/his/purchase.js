@@ -10,9 +10,9 @@ export function listPurchase(query) {
 }
 
 // 查询采购入库详细
-export function getPurchase(purId) {
+export function getPurchase(purOrderId) {
   return request({
-    url: '/his/purchase/' + purId,
+    url: '/his/purchase/' + purOrderId,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updatePurchase(data) {
 }
 
 // 删除采购入库
-export function delPurchase(purId) {
+export function delPurchase(purOrderId) {
   return request({
-    url: '/his/purchase/' + purId,
+    url: '/his/purchase/' + purOrderId,
     method: 'delete'
   })
 }
