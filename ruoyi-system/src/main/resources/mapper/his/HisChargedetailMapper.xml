@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.his.mapper.HisChargedetailMapper">
+    
+    <resultMap type="HisChargedetail" id="HisChargedetailResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="drugName"    column="drug_name"    />
+        <result property="drugId"    column="drug_id"    />
+        <result property="drugRxPrice"    column="drug_Rx_price"    />
+        <result property="drugPrice"    column="drug_price"    />
+        <result property="drugAmount"    column="drug_amount"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectHisChargedetailVo">
+        select id, order_id, drug_name, drug_id, drug_Rx_price, drug_price, drug_amount, type, status from his_chargedetail
+    </sql>
+
+    <select id="selectHisChargedetailList" parameterType="HisChargedetail" resultMap="HisChargedetailResult">
+        <include refid="selectHisChargedetailVo"/>
+        <where>  
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="drugName != null  and drugName != ''"> and drug_name like concat('%', #{drugName}, '%')</if>
+            <if test="drugId != null "> and drug_id = #{drugId}</if>
+            <if test="drugRxPrice != null "> and drug_Rx_price = #{drugRxPrice}</if>
+            <if test="drugPrice != null "> and drug_price = #{drugPrice}</if>
+            <if test="drugAmount != null "> and drug_amount = #{drugAmount}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectHisChargedetailById" parameterType="Long" resultMap="HisChargedetailResult">
+        <include refid="selectHisChargedetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHisChargedetail" parameterType="HisChargedetail" useGeneratedKeys="true" keyProperty="id">
+        insert into his_chargedetail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="drugName != null">drug_name,</if>
+            <if test="drugId != null">drug_id,</if>
+            <if test="drugRxPrice != null">drug_Rx_price,</if>
+            <if test="drugPrice != null">drug_price,</if>
+            <if test="drugAmount != null">drug_amount,</if>
+            <if test="type != null">type,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="drugName != null">#{drugName},</if>
+            <if test="drugId != null">#{drugId},</if>
+            <if test="drugRxPrice != null">#{drugRxPrice},</if>
+            <if test="drugPrice != null">#{drugPrice},</if>
+            <if test="drugAmount != null">#{drugAmount},</if>
+            <if test="type != null">#{type},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHisChargedetail" parameterType="HisChargedetail">
+        update his_chargedetail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="drugName != null">drug_name = #{drugName},</if>
+            <if test="drugId != null">drug_id = #{drugId},</if>
+            <if test="drugRxPrice != null">drug_Rx_price = #{drugRxPrice},</if>
+            <if test="drugPrice != null">drug_price = #{drugPrice},</if>
+            <if test="drugAmount != null">drug_amount = #{drugAmount},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHisChargedetailById" parameterType="Long">
+        delete from his_chargedetail where id = #{id}
+    </delete>
+
+    <delete id="deleteHisChargedetailByIds" parameterType="String">
+        delete from his_chargedetail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
