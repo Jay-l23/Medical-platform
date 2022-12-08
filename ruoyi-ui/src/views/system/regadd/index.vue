@@ -188,46 +188,61 @@
           <el-input v-model="form.regCardNum" placeholder="请输入身份证号"/>
         </el-form-item>
         <el-form-item label="挂号科室" prop="regDepts">
-          <el-input v-model="form.regDepts" placeholder="请输入挂号科室"/>
-        </el-form-item>
-        <el-form-item label="接诊医生" prop="regDocter">
-          <el-input v-model="form.regDocter" placeholder="请输入接诊医生"/>
-        </el-form-item>
-        <el-form-item label="挂号费用" prop="regPrice">
-          <el-input v-model="form.regPrice" placeholder="请输入挂号费用"/>
-        </el-form-item>
-        <el-form-item label="流水编号" prop="regNum">
-          <el-input v-model="form.regNum" placeholder="请输入流水编号"/>
-        </el-form-item>
-        <el-form-item label="状态" prop="regStatus">
-          <el-select v-model="form.regStatus" placeholder="请选择状态">
-            <el-option
-              v-for="dict in dict.type.his_reg"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
+          <el-select v-model="form.regDepts" placeholder="请选择挂号科室">
+            <el-option label="内科" value="内科"></el-option>
+            <el-option label="外科" value="外科"></el-option>
+            <el-option label="儿科" value="儿科"></el-option>
+            <el-option label="妇科" value="妇科"></el-option>
+            <el-option label="眼科" value="眼科"></el-option>
+            <el-option label="耳鼻喉科" value="耳鼻喉科"></el-option>
+            <el-option label="口腔科" value="口腔科"></el-option>
+            <el-option label="皮肤科" value="皮肤科"></el-option>
           </el-select>
+<!--          <el-input v-model="form.regDepts" placeholder="请输入挂号科室"/>-->
         </el-form-item>
-        <el-form-item label="就诊日期" prop="regSdate">
-          <el-date-picker clearable
-                          v-model="form.regSdate"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择就诊日期">
-          </el-date-picker>
-        </el-form-item>
+<!--        <el-form-item label="接诊医生" prop="regDocter">-->
+<!--          <el-input v-model="form.regDocter" placeholder="请输入接诊医生"/>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="挂号费用" prop="regPrice">-->
+<!--          <el-input v-model="form.regPrice" placeholder="请输入挂号费用"/>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="流水编号" prop="regNum">-->
+<!--          <el-input v-model="form.regNum" placeholder="请输入流水编号"/>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="状态" prop="regStatus">-->
+<!--          <el-select v-model="form.regStatus" placeholder="请选择状态">-->
+<!--            <el-option-->
+<!--              v-for="dict in dict.type.his_reg"-->
+<!--              :key="dict.value"-->
+<!--              :label="dict.label"-->
+<!--              :value="dict.value"-->
+<!--            ></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+<!--        <el-form-item label="就诊日期" prop="regSdate">-->
+<!--          <el-date-picker clearable-->
+<!--                          v-model="form.regSdate"-->
+<!--                          type="date"-->
+<!--                          value-format="yyyy-MM-dd"-->
+<!--                          placeholder="请选择就诊日期">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
         <el-form-item label="挂号时段" prop="regTime">
-          <el-input v-model="form.regTime" placeholder="请输入挂号时段"/>
+<!--          <el-input v-model="form.regTime" placeholder="请输入挂号时段"/>-->
+          <el-select v-model="form.regTime" placeholder="请输入挂号时段">
+            <el-option label="上午" value="上午"></el-option>
+            <el-option label="下午" value="下午"></el-option>
+          </el-select>
+
         </el-form-item>
-        <el-form-item label="挂号时间" prop="regRdate">
-          <el-date-picker clearable
-                          v-model="form.regRdate"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择挂号时间">
-          </el-date-picker>
-        </el-form-item>
+<!--        <el-form-item label="挂号时间" prop="regRdate">-->
+<!--          <el-date-picker clearable-->
+<!--                          v-model="form.regRdate"-->
+<!--                          type="date"-->
+<!--                          value-format="yyyy-MM-dd"-->
+<!--                          placeholder="请选择挂号时间">-->
+<!--          </el-date-picker>-->
+<!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -299,33 +314,33 @@
         form: {},
         // 表单校验
         rules: {
-          patiName: [
-            {required: true, message: "患者姓名不能为空", trigger: "blur"}
-          ],
-          regCardNum: [
-            {required: true, message: "身份证号不能为空", trigger: "blur"}
-          ],
-          regDepts: [
-            {required: true, message: "挂号科室不能为空", trigger: "change"}
-          ],
-          regPrice: [
-            {required: true, message: "挂号费用不能为空", trigger: "blur"}
-          ],
-          regNum: [
-            {required: true, message: "流水编号不能为空", trigger: "blur"}
-          ],
-          regStatus: [
-            {required: true, message: "状态不能为空", trigger: "change"}
-          ],
-          regType: [
-            {required: true, message: "挂号类型不能为空", trigger: "change"}
-          ],
-          regTime: [
-            {required: true, message: "挂号时段不能为空", trigger: "blur"}
-          ],
-          regRdate: [
-            {required: true, message: "挂号时间不能为空", trigger: "blur"}
-          ],
+          // patiName: [
+          //   {required: true, message: "患者姓名不能为空", trigger: "blur"}
+          // ],
+          // regCardNum: [
+          //   {required: true, message: "身份证号不能为空", trigger: "blur"}
+          // ],
+          // regDepts: [
+          //   {required: true, message: "挂号科室不能为空", trigger: "change"}
+          // ],
+          // regPrice: [
+          //   {required: true, message: "挂号费用不能为空", trigger: "blur"}
+          // ],
+          // regNum: [
+          //   {required: true, message: "流水编号不能为空", trigger: "blur"}
+          // ],
+          // regStatus: [
+          //   {required: true, message: "状态不能为空", trigger: "change"}
+          // ],
+          // regType: [
+          //   {required: true, message: "挂号类型不能为空", trigger: "change"}
+          // ],
+          // regTime: [
+          //   {required: true, message: "挂号时段不能为空", trigger: "blur"}
+          // ],
+          // regRdate: [
+          //   {required: true, message: "挂号时间不能为空", trigger: "blur"}
+          // ],
         }
       };
     },

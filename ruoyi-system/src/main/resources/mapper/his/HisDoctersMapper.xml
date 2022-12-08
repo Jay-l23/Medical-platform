@@ -1,43 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.his.mapper.HisDoctersMapper">
-    
+
     <resultMap type="HisDocters" id="HisDoctersResult">
-        <result property="dId"    column="d_id"    />
-        <result property="dName"    column="d_name"    />
-        <result property="deptsId"    column="depts_id"    />
-        <result property="dPhone"    column="d_phone"    />
-        <result property="dSex"    column="d_sex"    />
-        <result property="dAge"    column="d_age"    />
-        <result property="orderwork"    column="orderwork"    />
-        <result property="dEducationBg"    column="d_education_bg"    />
-        <result property="createTime"    column="create_time"    />
+        <result property="dId" column="d_id"/>
+        <result property="dName" column="d_name"/>
+        <result property="deptsId" column="depts_id"/>
+        <result property="dPhone" column="d_phone"/>
+        <result property="dSex" column="d_sex"/>
+        <result property="dAge" column="d_age"/>
+        <result property="status" column="status"/>
+        <result property="orderwork" column="orderwork"/>
+        <result property="dEducationBg" column="d_education_bg"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectHisDoctersVo">
-        select d_id, d_name, depts_id, d_phone, d_sex, d_age, orderwork, d_education_bg, create_time from sys_docters
+        select d_id,
+               d_name,
+               depts_id,
+               d_phone,
+               d_sex,
+               d_age,
+               d_status,
+               orderwork,
+               d_education_bg,
+               create_time
+        from sys_docters
     </sql>
 
     <select id="selectHisDoctersList" parameterType="HisDocters" resultMap="HisDoctersResult">
         <include refid="selectHisDoctersVo"/>
-        <where>  
-            <if test="dName != null  and dName != ''"> and d_name like concat('%', #{dName}, '%')</if>
-            <if test="deptsId != null "> and depts_id = #{deptsId}</if>
-            <if test="dPhone != null  and dPhone != ''"> and d_phone = #{dPhone}</if>
-            <if test="dSex != null  and dSex != ''"> and d_sex = #{dSex}</if>
-            <if test="dAge != null "> and d_age = #{dAge}</if>
-            <if test="orderwork != null "> and orderwork = #{orderwork}</if>
-            <if test="dEducationBg != null "> and d_education_bg = #{dEducationBg}</if>
+        <where>
+            <if test="dName != null  and dName != ''">and d_name like concat('%', #{dName}, '%')</if>
+            <if test="deptsId != null ">and depts_id = #{deptsId}</if>
+            <if test="dPhone != null  and dPhone != ''">and d_phone = #{dPhone}</if>
+            <if test="dSex != null  and dSex != ''">and d_sex = #{dSex}</if>
+            <if test="dAge != null ">and d_age = #{dAge}</if>
+            <if test="orderwork != null ">and orderwork = #{orderwork}</if>
+            <if test="dEducationBg != null ">and d_education_bg = #{dEducationBg}</if>
         </where>
     </select>
-    
+
     <select id="selectHisDoctersByDId" parameterType="Long" resultMap="HisDoctersResult">
         <include refid="selectHisDoctersVo"/>
         where d_id = #{dId}
     </select>
-        
+
     <insert id="insertHisDocters" parameterType="HisDocters" useGeneratedKeys="true" keyProperty="dId">
         insert into sys_docters
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -49,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="orderwork != null">orderwork,</if>
             <if test="dEducationBg != null">d_education_bg,</if>
             <if test="createTime != null">create_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="dName != null and dName != ''">#{dName},</if>
             <if test="deptsId != null">#{deptsId},</if>
@@ -59,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="orderwork != null">#{orderwork},</if>
             <if test="dEducationBg != null">#{dEducationBg},</if>
             <if test="createTime != null">#{createTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateHisDocters" parameterType="HisDocters">
@@ -78,7 +89,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteHisDoctersByDId" parameterType="Long">
-        delete from sys_docters where d_id = #{dId}
+        delete
+        from sys_docters
+        where d_id = #{dId}
     </delete>
 
     <delete id="deleteHisDoctersByDIds" parameterType="String">

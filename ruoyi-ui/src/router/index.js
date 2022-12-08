@@ -135,6 +135,20 @@ export const dynamicRoutes = [
     ]
   },
   {
+    path: '/his/dict-data',
+    component: Layout,
+    hidden: true,
+     permissions: ['his:purchase:list'],
+    children: [
+      {
+        path: 'index/:purOrderId(\\d+)',
+        component: () => import('@/views/his/purchase/data'),
+        name: 'Data',
+        meta: { title: '订单审核', activeMenu: '/his/purchase' }
+      }
+    ]
+  },
+  {
     path: '/monitor/job-log',
     component: Layout,
     hidden: true,

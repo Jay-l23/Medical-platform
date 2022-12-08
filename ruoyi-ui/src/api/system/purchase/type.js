@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询采购入库列表
 export function listPurchase(query) {
   return request({
-    url: '/his/purchase/list',
+    url: '/system/purchase/type/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listPurchase(query) {
 // 查询采购入库详细
 export function getPurchase(purOrderId) {
   return request({
-    url: '/his/purchase/' + purOrderId,
+    url: '/system/purchase/type/' + purOrderId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getPurchase(purOrderId) {
 // 新增采购入库
 export function addPurchase(data) {
   return request({
-    url: '/his/purchase',
+    url: '/system/purchase',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addPurchase(data) {
 // 修改采购入库
 export function updatePurchase(data) {
   return request({
-    url: '/his/purchase',
+    url: '/system/purchase',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updatePurchase(data) {
 // 删除采购入库
 export function delPurchase(purOrderId) {
   return request({
-    url: '/his/purchase/' + purOrderId,
+    url: '/system/purchase/' + purOrderId,
     method: 'delete'
   })
 }

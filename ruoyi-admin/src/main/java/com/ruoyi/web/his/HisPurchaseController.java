@@ -28,7 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2022-12-06
  */
 @RestController
-@RequestMapping("/his/purchase")
+@RequestMapping("/his/purchase/type")
 public class HisPurchaseController extends BaseController
 {
     @Autowired

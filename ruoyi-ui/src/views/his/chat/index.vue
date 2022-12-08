@@ -9,6 +9,7 @@
 <script>
   // import SayMana from "../../components/sys/basic/SayMana";
   import SayMana from "./SayMana";
+  import x1 from "./x1";
   export default {
     name: "SysBasic",
     data() {

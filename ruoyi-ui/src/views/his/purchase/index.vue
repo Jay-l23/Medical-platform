@@ -88,8 +88,14 @@
     </el-row>
 
     <el-table v-loading="loading" :data="purchaseList"  border @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="订单编号" align="center" prop="purOrderId" />
+<!--      <el-table-column type="selection" width="55" align="center" />-->
+      <el-table-column label="订单编号" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <router-link :to="'/his/dict-data/index/' + scope.row.purOrderId" class="link-type">
+            <span>{{ scope.row.purOrderId }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="订单总额" align="center" prop="purCount" />
       <el-table-column label="审核状态" align="center" prop="purVerify">
         <template slot-scope="scope">
@@ -161,7 +167,7 @@
 </template>
 
 <script>
-import { listPurchase, getPurchase, delPurchase, addPurchase, updatePurchase } from "@/api/his/purchase";
+import { listPurchase, getPurchase, delPurchase, addPurchase, updatePurchase } from "@/api/his/purchase/purchase";
 
 export default {
   name: "Purchase",

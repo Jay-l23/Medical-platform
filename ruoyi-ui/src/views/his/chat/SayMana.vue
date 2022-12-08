@@ -1,11 +1,36 @@
 <template>
   <div id="app">
 
-    公共聊天室：<input id="room" type="text" v-model="msg"/>
-    <button @click="sendMessage">发送</button>
-    <div id="chat">
-        <p v-for="(item,index) in msgList" :key="index">{{item}}</p>
-    </div>
+<!--    <input id="room" type="text" v-model="msg">-->
+
+<!--    </input>-->
+    <el-card>
+      <el-row>
+        <el-col :span="10">
+          <div id="chat">
+            <p v-for="(item,index) in msgList" :key="index">{{item}}</p>
+          </div>
+        </el-col>
+      </el-row>
+
+    </el-card>
+    <br>
+      <el-card>
+        <el-row :gutter="20">
+          <el-col :span="6" :xs="24" hidden>
+            1
+          </el-col>
+          <el-col :span="20" :xs="24">
+            <label>医患在线诊疗：</label><br>
+            <el-input  id="room" v-model="msg" type="textarea" placeholder="请输入单行文本"
+                       :autosize="{minRows: 4, maxRows: 4}" :style="{width: '50%'}">
+            </el-input>
+            <button @click="sendMessage">发送</button>
+
+          </el-col>
+        </el-row>
+      </el-card>
+
 </div>
 </template>
 
@@ -69,4 +94,5 @@ export default {
 </script>
 
 <style>
+
 </style>

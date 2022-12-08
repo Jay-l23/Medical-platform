@@ -135,16 +135,16 @@
         <el-form-item label="订单总额" prop="purCount">
           <el-input v-model="form.purCount" placeholder="请输入订单总额" />
         </el-form-item>
-        <el-form-item label="审核状态" prop="purVerify">
-          <el-select v-model="form.purVerify" placeholder="请选择审核状态">
-            <el-option
-              v-for="dict in dict.type.his_purchase"
-              :key="dict.value"
-              :label="dict.label"
-:value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="审核状态" prop="purVerify">-->
+<!--          <el-select v-model="form.purVerify" placeholder="请选择审核状态">-->
+<!--            <el-option-->
+<!--              v-for="dict in dict.type.his_purchase"-->
+<!--              :key="dict.value"-->
+<!--              :label="dict.label"-->
+<!--:value="parseInt(dict.value)"-->
+<!--            ></el-option>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <el-form-item label="供应商ID" prop="supId">
           <el-input v-model="form.supId" placeholder="请输入供应商ID" />
         </el-form-item>
