@@ -1,71 +1,76 @@
 <template>
   <div class="app-container">
-
-
     <el-row :gutter="20">
       <el-col :span="7" :xs="24">
-        <!-- 添加或修改患者库对话框 -->
-        <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-          <el-form-item label="姓名" prop="patiName">
-            <el-input v-model="form.patiName" placeholder="请输入患者名称" />
-          </el-form-item>
-          <el-form-item label="身份证号" prop="patiCode">
-            <el-input v-model="form.patiCode" placeholder="请输入患者身份证" />
-          </el-form-item>
-          <el-form-item label="患者电话" prop="patiPhone">
-            <el-input v-model="form.patiPhone" placeholder="请输入患者电话" />
-          </el-form-item>
-          <el-form-item label="出生年月" prop="patiBirthday">
-            <el-date-picker clearable
-                            v-model="form.patiBirthday"
-                            type="date"
-                            value-format="yyyy-MM-dd"
-                            placeholder="请选择出生年月">
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="患者年龄" prop="patiAge">
-            <el-input v-model="form.patiAge" placeholder="请输入患者年龄" />
-          </el-form-item>
-          <el-form-item label="患者性别" prop="patiSex">
-            <el-select v-model="form.patiSex" placeholder="请选择患者性别">
-              <el-option
-                v-for="dict in dict.type.sys_user_sex"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="患者住址" prop="patiAddress">
-            <el-input v-model="form.patiAddress" placeholder="请输入患者住址" />
-          </el-form-item>
-          <el-form-item label="过敏史" prop="patiAllergy">
-            <el-input v-model="form.patiAllergy" placeholder="请输入患者过敏史" />
-          </el-form-item>
-          <el-form-item label="信息状态">
-            <el-radio-group v-model="form.status">
-              <el-radio
-                v-for="dict in dict.type.sys_info_status"
-                :key="dict.value"
-                :label="dict.value"
-              >{{dict.label}}</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="form.remark" placeholder="请输入备注" />
-          </el-form-item>
-        </el-form>
-        <div style="margin: auto">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
-        </div>
+        <el-card class="box-card">
+          <!-- 添加或修改患者库对话框 -->
+          <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+            <el-form-item label="姓名" prop="patiName">
+              <el-input v-model="form.patiName" placeholder="请输入患者名称" />
+            </el-form-item>
+            <el-form-item label="身份证号" prop="patiCode">
+              <el-input v-model="form.patiCode" placeholder="请输入患者身份证" />
+            </el-form-item>
+            <el-form-item label="患者电话" prop="patiPhone">
+              <el-input v-model="form.patiPhone" placeholder="请输入患者电话" />
+            </el-form-item>
+            <el-form-item label="出生年月" prop="patiBirthday">
+              <el-date-picker clearable
+                              v-model="form.patiBirthday"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="请选择出生年月">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="患者年龄" prop="patiAge">
+              <el-input v-model="form.patiAge" placeholder="请输入患者年龄" />
+            </el-form-item>
+            <el-form-item label="患者性别" prop="patiSex">
+              <el-select v-model="form.patiSex" placeholder="请选择患者性别">
+                <el-option
+                  v-for="dict in dict.type.sys_user_sex"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="患者住址" prop="patiAddress">
+              <el-input v-model="form.patiAddress" placeholder="请输入患者住址" />
+            </el-form-item>
+            <el-form-item label="过敏史" prop="patiAllergy">
+              <el-input v-model="form.patiAllergy" placeholder="请输入患者过敏史" />
+            </el-form-item>
+            <el-form-item label="信息状态">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in dict.type.sys_info_status"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" placeholder="请输入备注" />
+            </el-form-item>
+          </el-form>
+<!--          <div style="margin: auto" class="dialog-pane">-->
+<!--            <el-button type="primary" @click="submitForm">确 定</el-button>-->
+<!--            <el-button @click="cancel">取 消</el-button>-->
+<!--          </div>-->
+          <div style="float: right">
+            <el-button type="primary" @click="submitForm">确 定</el-button>
+            <el-button @click="cancel">取 消</el-button>
+          </div>
+        </el-card>
       </el-col>
-      <el-col :span="14" :xs="24">
+      <el-col :span="17" :xs="24">
+        <el-card>
 
+
+        </el-card>
       </el-col>
     </el-row>
-
-
 
 
   </div>

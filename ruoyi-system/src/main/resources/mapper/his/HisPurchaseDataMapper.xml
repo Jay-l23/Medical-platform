@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.his.mapper.HisPurchaseDataMapper">
+    
+    <resultMap type="HisPurchaseData" id="HisPurchaseDataResult">
+        <result property="purOrderId"    column="pur_order_id"    />
+        <result property="drugId"    column="drug_id"    />
+        <result property="purNumbers"    column="pur_numbers"    />
+        <result property="purId"    column="pur_id"    />
+        <result property="purPrice"    column="pur_price"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHisPurchaseDataVo">
+        select pur_order_id, drug_id, pur_numbers, pur_id, pur_price, create_by, create_time, update_by, update_time, remark from his_purchase_drug
+    </sql>
+
+    <select id="selectHisPurchaseDataList" parameterType="HisPurchaseData" resultMap="HisPurchaseDataResult">
+        <include refid="selectHisPurchaseDataVo"/>
+        <where>  
+            <if test="drugId != null "> and drug_id = #{drugId}</if>
+            <if test="purNumbers != null "> and pur_numbers = #{purNumbers}</if>
+            <if test="purId != null "> and pur_id = #{purId}</if>
+            <if test="purPrice != null "> and pur_price = #{purPrice}</if>
+        </where>
+    </select>
+    
+    <select id="selectHisPurchaseDataByPurOrderId" parameterType="String" resultMap="HisPurchaseDataResult">
+        <include refid="selectHisPurchaseDataVo"/>
+        where pur_order_id = #{purOrderId}
+    </select>
+        
+    <insert id="insertHisPurchaseData" parameterType="HisPurchaseData">
+        insert into his_purchase_drug
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="purOrderId != null">pur_order_id,</if>
+            <if test="drugId != null">drug_id,</if>
+            <if test="purNumbers != null">pur_numbers,</if>
+            <if test="purId != null">pur_id,</if>
+            <if test="purPrice != null">pur_price,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="purOrderId != null">#{purOrderId},</if>
+            <if test="drugId != null">#{drugId},</if>
+            <if test="purNumbers != null">#{purNumbers},</if>
+            <if test="purId != null">#{purId},</if>
+            <if test="purPrice != null">#{purPrice},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHisPurchaseData" parameterType="HisPurchaseData">
+        update his_purchase_drug
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="drugId != null">drug_id = #{drugId},</if>
+            <if test="purNumbers != null">pur_numbers = #{purNumbers},</if>
+            <if test="purId != null">pur_id = #{purId},</if>
+            <if test="purPrice != null">pur_price = #{purPrice},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where pur_order_id = #{purOrderId}
+    </update>
+
+    <delete id="deleteHisPurchaseDataByPurOrderId" parameterType="String">
+        delete from his_purchase_drug where pur_order_id = #{purOrderId}
+    </delete>
+
+    <delete id="deleteHisPurchaseDataByPurOrderIds" parameterType="String">
+        delete from his_purchase_drug where pur_order_id in 
+        <foreach item="purOrderId" collection="array" open="(" separator="," close=")">
+            #{purOrderId}
+        </foreach>
+    </delete>
+</mapper>

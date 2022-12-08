@@ -138,7 +138,7 @@ export const dynamicRoutes = [
     path: '/his/dict-data',
     component: Layout,
     hidden: true,
-     permissions: ['his:purchase:list'],
+     permissions: ['system:purchase:list'],
     children: [
       {
         path: 'index/:purOrderId(\\d+)',

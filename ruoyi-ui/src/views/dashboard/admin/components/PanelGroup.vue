@@ -7,7 +7,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            访客
+            患者库
           </div>
           <count-to :start-val="0" :end-val="5467" :duration="2600" class="card-panel-num" />
         </div>
@@ -46,9 +46,11 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            订单
+            挂号量
           </div>
-          <count-to :start-val="0" :end-val="239" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="regList.regNum||0" :duration="3600" class="card-panel-num">
+
+          </count-to>
         </div>
       </div>
     </el-col>
@@ -57,12 +59,46 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import {listReg, getReg, delReg, addReg, updateReg} from "@/api/system/reg";
 
 export default {
   components: {
     CountTo
   },
+  data(){
+    return {
+      regList: [],
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        patiName: null,
+        regDepts: null,
+        regDocter: null,
+        regPrice: null,
+        regNum: null,
+        regStatus: null,
+        regSdate: null,
+        regType: null,
+        regTime: null,
+        regRdate: null,
+      },
+    }
+  },
+  created() {
+    // console.log("------------------1231")
+    this.getList()
+  },
   methods: {
+    getList() {
+      listReg(this.queryParams).then(response => {
+        this.regList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+        console.log(this.regList)
+
+      });
+
+    },
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     }

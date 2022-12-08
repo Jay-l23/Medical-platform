@@ -5,7 +5,7 @@
         {{ scope.row.orderId }}
       </template>
     </el-table-column>
-    <el-table-column label="价格" width="195" align="center">
+    <el-table-column label="治疗费用" width="195" align="center">
       <template slot-scope="scope">
         ¥{{ scope.row.orderPrice }}
       </template>

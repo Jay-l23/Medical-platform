@@ -66,7 +66,7 @@ export default {
               { value: 240, name: 'Technology' },
               { value: 149, name: 'Forex' },
               { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
+              { value: 1, name: 'Forecasts' }
             ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600
