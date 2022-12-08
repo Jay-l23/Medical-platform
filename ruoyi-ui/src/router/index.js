@@ -135,10 +135,10 @@ export const dynamicRoutes = [
     ]
   },
   {
-    path: '/his/dict-data',
+    path: '/his/purchase-data',
     component: Layout,
     hidden: true,
-     permissions: ['system:purchase:list'],
+    permissions: ['system:purchase:list'],
     children: [
       {
         path: 'index/:purOrderId(\\d+)',
@@ -181,6 +181,7 @@ export const dynamicRoutes = [
 // 防止连续点击多次路由报错
 let routerPush = Router.prototype.push;
 Router.prototype.push = function push(location) {
+  console.log(location)
   return routerPush.call(this, location).catch(err => err)
 }
 

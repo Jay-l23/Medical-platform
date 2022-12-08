@@ -12,7 +12,7 @@ export function listData(query) {
 // 查询订单审核详细
 export function getData(purOrderId) {
   return request({
-    url: '/his/Data/' + purOrderId,
+    url: '/his/data/' + purOrderId,
     method: 'get'
   })
 }

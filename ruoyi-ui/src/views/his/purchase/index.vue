@@ -91,7 +91,7 @@
 <!--      <el-table-column type="selection" width="55" align="center" />-->
       <el-table-column label="订单编号" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <router-link :to="'/his/dict-data/index/' + scope.row.purOrderId" class="link-type">
+          <router-link :to="'/his/purchase-data/index/' + scope.row.purOrderId" class="link-type">
             <span>{{ scope.row.purOrderId }}</span>
           </router-link>
         </template>
@@ -169,9 +169,10 @@
 <script>
 import { listPurchase, getPurchase, delPurchase, addPurchase, updatePurchase } from "@/api/his/purchase/purchase";
 
+
 export default {
   name: "Purchase",
-  dicts: ['his_purchase'],
+  dicts: ['his_purchase_disable'],
   data() {
     return {
       // 遮罩层

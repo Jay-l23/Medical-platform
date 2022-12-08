@@ -1,7 +1,12 @@
 package com.ruoyi.web.his;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.his.service.IHisPurchaseService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,17 +28,19 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 订单审核Controller
- * 
+ *
  * @author ruoyi
  * @date 2022-12-08
  */
 @RestController
-@RequestMapping("/his/type/data")
+@RequestMapping("/his/data")
 public class HisPurchaseDataController extends BaseController
 {
     @Autowired
     private IHisPurchaseDataService hisPurchaseDataService;
 
+    @Autowired
+    private IHisPurchaseService hisPurchaseService;
     /**
      * 查询订单审核列表
      */
@@ -69,6 +76,22 @@ public class HisPurchaseDataController extends BaseController
         return success(hisPurchaseDataService.selectHisPurchaseDataByPurOrderId(purOrderId));
     }
 
+    /**
+     * 根据订单编号查询订单具体信息
+     * @param dictType
+     * @return
+     */
+//    @GetMapping(value = "/type/{dictType}")
+//    public AjaxResult dictType(@PathVariable String dictType)
+//    {
+//        List<HisPurchaseData> data = hisPurchaseService.selectTypeDataByInfo(dictType);
+////        List<SysDictData> data = hisPurchaseService.selectDictDataByType(dictType);
+//        if (StringUtils.isNull(data))
+//        {
+//            data = new ArrayList<HisPurchaseData>();
+//        }
+//        return success(data);
+//    }
     /**
      * 新增订单审核
      */
