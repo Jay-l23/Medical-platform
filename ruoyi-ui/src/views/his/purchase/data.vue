@@ -94,7 +94,6 @@
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
-
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="订单编号" align="center" prop="purOrderId"/>
@@ -285,11 +284,11 @@
       // this.getTypeList();
     },
     methods: {
-      /** 查询字典类型详细 */
+      /** 查询订单详细 */
       getType(purOrderId) {
         getData(purOrderId).then(response => {
-          console.log(response.data)
-
+          this.dataList.push(response.data)
+          this.loading = false
         })
       },
       /** 查询字典类型列表 */

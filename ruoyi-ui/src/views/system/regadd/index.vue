@@ -44,7 +44,7 @@
     <el-table v-loading="loading" :data="regList" border @selection-change="handleSelectionChange">
       <el-table-column label="患者姓名" align="center" prop="patiName"/>
       <el-table-column label="挂号科室" align="center" prop="regDepts"/>
-      <el-table-column label="接诊医生" align="center" prop="regDocter"/>
+<!--      <el-table-column label="接诊医生" align="center" prop="regDocter"/>-->
       <el-table-column label="挂号费用" align="center" prop="regPrice"/>
       <el-table-column label="流水编号" align="center" prop="regNum"/>
       <el-table-column label="状态" align="center" prop="regStatus">
@@ -186,6 +186,22 @@
         </el-form-item>
         <el-form-item label="身份证号" prop="regCardNum">
           <el-input v-model="form.regCardNum" placeholder="请输入身份证号"/>
+        </el-form-item>
+        <el-form-item label="挂号类型" prop="regType">
+          <el-select v-model = "form.regType" placeholder="请输入挂号类型">
+            <el-option label="门诊" value="门诊"></el-option>
+            <el-option label="门诊+病历单" value="门诊+病历单"></el-option>
+            <el-option label="急诊" value="急诊"></el-option>
+            <el-option label="急诊+病历单" value="急诊+病历单"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="挂号费用" prop="regType">
+          <el-select v-model = "form.regPrice" placeholder="请输入挂号费用">
+            <el-option label="5" value="5"></el-option>
+            <el-option label="门诊+病历单" value="门诊+病历单"></el-option>
+            <el-option label="急诊" value="急诊"></el-option>
+            <el-option label="急诊+病历单" value="急诊+病历单"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="挂号科室" prop="regDepts">
           <el-select v-model="form.regDepts" placeholder="请选择挂号科室">
